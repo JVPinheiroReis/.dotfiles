@@ -1,5 +1,4 @@
 [tools]
-dotnet = "10.0.101"
 gradle = "9.2.1"
 java = "temurin-25.0.1+8.0.LTS"
 maven = "3.9.12"
