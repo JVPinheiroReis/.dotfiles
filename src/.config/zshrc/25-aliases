@@ -13,6 +13,7 @@ alias vdl='y -f "bestaudio[ext=m4a]+bestvideo*[ext=mp4]/best[ext=mp4]/best"'
 # alias mdl='y -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format flac --audio-quality 0'
 alias v='vim'
 alias nv='nvim'
+alias yz='yazi'
 
 # -----------------------------------------------------
 # Git 
