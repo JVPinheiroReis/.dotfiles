@@ -10,7 +10,8 @@
 	"buffer_line_height": "comfortable",
 	"buffer_font_weight": 400.0,
 	"terminal": {
-		"env": {}
+		"font_family": "FiraCode Nerd Font Mono",
+  "env": {}
 	},
 	"project_panel": {
 		"auto_fold_dirs": false

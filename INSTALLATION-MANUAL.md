@@ -31,10 +31,10 @@ Before we dive into the installation process, let's ensure that your system is r
 
 The installation process will create the following physical partition scheme on your drive:
 
-| Partition          | Size    | Mount Point | Filesystem | Notes                      |
-| ------------------ | ------- | ----------- | ---------- | -------------------------- |
-| `/dev/<efi-disk>`  | +512M   | `/boot/efi` | FAT32      | EFI System Partition       |
-| `/dev/<boot-disk>` | +1GB    | `/boot`     | ext4       | Unencrypted boot partition |
+| Partition          | Size  | Mount Point | Filesystem | Notes                      |
+| ------------------ | ----- | ----------- | ---------- | -------------------------- |
+| `/dev/<efi-disk>`  | +512M | `/boot/efi` | FAT32      | EFI System Partition       |
+| `/dev/<boot-disk>` | +1GB  | `/boot`     | ext4       | Unencrypted boot partition |
 
 Inside the LUKS container (`/dev/mapper/cryptroot`), we will set up a BTRFS filesystem with the following subvolume layout:
 
@@ -49,7 +49,7 @@ Inside the LUKS container (`/dev/mapper/cryptroot`), we will set up a BTRFS file
 Please be aware that these names should be substituted with the actual device paths relevant to your system configuration:
 
 | Device         | In this Doc        | Examples                      |
-|:-------------- | ------------------ |:----------------------------- |
+| :------------- | ------------------ | :---------------------------- |
 | Disk Device    | `/dev/<your-disk>` | `/dev/sda`, `/dev/nvme0n1`    |
 | EFI Partition  | `/dev/<efi-disk>`  | `/dev/sda5`, `/dev/nvme0n1p1` |
 | Boot Partition | `/dev/<boot-disk>` | `/dev/sda6`, `/dev/nvme0n1p2` |
@@ -57,40 +57,40 @@ Please be aware that these names should be substituted with the actual device pa
 
 ## Install Arch Linux
 
-1. Connect the USB drive and boot from the Arch Linux ISO.
+1.  Connect the USB drive and boot from the Arch Linux ISO.
 
-2. Set your keyboard layout:
+2.  Set your keyboard layout:
 
-   ```shell
-   loadkeys <keyboard-layout>
-   ```
+    ```shell
+    loadkeys <keyboard-layout>
+    ```
 
-3. Set pacman configs, where "number" could be what you want, but not too high:
+3.  Set pacman configs, where "number" could be what you want, but not too high:
 
-   ```shell
-   vim /etc/pacman.conf
-   
-   # Uncomment and modify:
-   # ParallelDownloads = <number>
-   ```
+    ```shell
+    vim /etc/pacman.conf
 
-4. Make sure the system is booted in UEFI mode. The following command should display the directory contents without error:
+    # Uncomment and modify:
+    # ParallelDownloads = <number>
+    ```
 
-   ```shell
-   ls /sys/firmware/efi/efivars
-   ```
+4.  Make sure the system is booted in UEFI mode. The following command should display the directory contents without error:
 
-5. Connect to the internet. A wired connection is preferred since it's easier to connect. [More info](https://wiki.archlinux.org/index.php/Installation_guide#Connect_to_the_internet)
+    ```shell
+    ls /sys/firmware/efi/efivars
+    ```
 
-   **Note on Device Names:** Before partitioning, identify your disk's name. It will likely be `/dev/sda` or `/dev/vda` for SATA drives (including SSDs and HDDs) or `/dev/nvme0n1` for NVMe drives. Use `lsblk` to list block devices and find the correct name for your system. The guide will use `<your-disk>` as a placeholder.
+5.  Connect to the internet. A wired connection is preferred since it's easier to connect. [More info](https://wiki.archlinux.org/index.php/Installation_guide#Connect_to_the_internet)
 
-6. Run `fdisk` and follow until step 11 to create Linux partitions:
+    **Note on Device Names:** Before partitioning, identify your disk's name. It will likely be `/dev/sda` or `/dev/vda` for SATA drives (including SSDs and HDDs) or `/dev/nvme0n1` for NVMe drives. Use `lsblk` to list block devices and find the correct name for your system. The guide will use `<your-disk>` as a placeholder.
 
-   ```shell
-   fdisk /dev/<your-disk>
-   ```
+6.  Run `fdisk` and follow until step 11 to create Linux partitions:
 
-7. Create an empty GPT partition table using the `g` command. (**WARNING:** This will erase the entire disk.)
+    ```shell
+    fdisk /dev/<your-disk>
+    ```
+
+7.  Create an empty GPT partition table using the `g` command. (**WARNING:** This will erase the entire disk.)
 
     ```
     Command (m for help): g
@@ -109,7 +109,7 @@ Please be aware that these names should be substituted with the actual device pa
         Partition type or alias (type L to list all): uefi
         ```
 
-8. Create the Boot partition (`/dev/<boot-disk>`):
+8.  Create the Boot partition (`/dev/<boot-disk>`):
 
     ```shell
     Command (m for help): n
@@ -121,7 +121,7 @@ Please be aware that these names should be substituted with the actual device pa
     Partition type or alias (type L to list all): linux
     ```
 
-9. Create the LUKS partition (`/dev/<luks-disk>`):
+9.  Create the LUKS partition (`/dev/<luks-disk>`):
 
     ```shell
     Command (m for help): n
@@ -194,7 +194,6 @@ Please be aware that these names should be substituted with the actual device pa
     Now we will mount our newly created subvolumes, along with the boot partitions, to their final destinations under `/mnt`.
 
     **Note on Mount Options:**
-
     - `compress=zstd`: Enables transparent compression.
     - `noatime`: Improves performance by not writing file access times.
     - `ssd`: Use this if you are installing on an NVMe or a SATA SSD. **Omit this option for traditional Hard Disk Drives (HDDs).**
@@ -234,7 +233,7 @@ Please be aware that these names should be substituted with the actual device pa
     ```shell
     # For AMD CPUs:
     pacstrap -K /mnt base base-devel linux linux-firmware amd-ucode btrfs-progs mesa plymouth openssh git vim sudo
-    
+
     # For Intel CPUs:
     pacstrap -K /mnt base base-devel linux linux-firmware intel-ucode btrfs-progs mesa plymouth openssh git vim sudo
     ```
@@ -243,7 +242,7 @@ Please be aware that these names should be substituted with the actual device pa
 
     ```shell
     genfstab -U /mnt > /mnt/etc/fstab
-    
+
     # Check with
     cat /mnt/etc/fstab
     ```
@@ -261,7 +260,7 @@ Please be aware that these names should be substituted with the actual device pa
     ```shell
     # See available timezones:
     ls /usr/share/zoneinfo/
-    
+
     # Set timezone (you may should use other):
     ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
     ```
@@ -275,11 +274,11 @@ Please be aware that these names should be substituted with the actual device pa
 24. Set Locale:
 
     ```shell
-    vim /etc/locale.gen 
+    vim /etc/locale.gen
     # uncomment en_US.UTF-8 UTF-8 or another
-    
+
     locale-gen
-    
+
     echo LANG=en_US.UTF-8 > /etc/locale.conf
     ```
 
@@ -293,9 +292,9 @@ Please be aware that these names should be substituted with the actual device pa
 
     ```shell
     useradd -m -G wheel --shell /bin/bash YourUserName
-    
+
     passwd YourUserName
-    
+
     visudo
     # Uncomment %wheel ALL=(ALL) ALL
     ```
@@ -304,7 +303,7 @@ Please be aware that these names should be substituted with the actual device pa
 
     ```shell
     vim /etc/vconsole.conf
-    
+
     # KEYMAP=<keyboard-layout>
     ```
 
@@ -312,7 +311,7 @@ Please be aware that these names should be substituted with the actual device pa
 
     ```shell
     vim /etc/mkinitcpio.conf
-    
+
     # HOOKS=(base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)
     ```
 
@@ -326,7 +325,7 @@ Please be aware that these names should be substituted with the actual device pa
 
     ```shell
     pacman -S grub efibootmgr
-    
+
     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
     ```
 
@@ -382,37 +381,37 @@ Please be aware that these names should be substituted with the actual device pa
 
 1. Install dependencies:
 
-   ```shell
-   pacman -Syu greetd
-   ```
+    ```shell
+    pacman -Syu greetd
+    ```
 
 2. Config session and user:
 
-   ```shell
-   vim /etc/greetd/config.toml
-   ```
+    ```shell
+    vim /etc/greetd/config.toml
+    ```
 
-   Put this:
+    Put this:
 
-   ```
-   [terminal]
-   vt = 1
-   
-   [initial_session]
-   user="YourUserName"
-   command="Hyprland"
-   
-   [default_session]
-   command = "agreety --cmd /bin/sh"
-   user = "greeter"
-   ```
+    ```toml
+    [terminal]
+    vt = 1
+
+    [initial_session]
+    user="YourUserName"
+    command="Hyprland"
+
+    [default_session]
+    command = "agreety --cmd /bin/sh"
+    user = "greeter"
+    ```
 
 3. Enable `greetd`:
 
-   ```shell
-   # Don't use "enable --now"
-   sudo systemctl enable greetd
-   ```
+    ```shell
+    # Don't use "enable --now"
+    sudo systemctl enable greetd
+    ```
 
 4. Reboot and test.
 
@@ -420,9 +419,9 @@ Please be aware that these names should be substituted with the actual device pa
 
 1. Install dependencies:
 
-   ```shell
-    pacman -Syu reflector
-   ```
+    ```shell
+     pacman -Syu reflector
+    ```
 
 2. Enable `multilib`:
 
@@ -432,7 +431,7 @@ Please be aware that these names should be substituted with the actual device pa
 
 3. Add config for auto-runs:
 
-    ```
+    ```shell
     # /etc/xdg/reflector/reflector.conf
     --country 'Brazil','United States' # choose yours
     --protocol https
@@ -445,24 +444,24 @@ Please be aware that these names should be substituted with the actual device pa
 
 4. Enable to auto-run:
 
-   ```shell
-    systemctl enable --now reflector.service
-    systemctl enable --now reflector.timer
-   ```
+    ```shell
+     systemctl enable --now reflector.service
+     systemctl enable --now reflector.timer
+    ```
 
 ### Basic setup SSH
 
 1. Download dependencies:
 
-   ```shell
-    pacman -Syu openssh
-   ```
+    ```shell
+     pacman -Syu openssh
+    ```
 
 2. Add some keys:
 
-   ```shell
-    ssh-keygen -t ed25519 -C "your@email.com"
-   ```
+    ```shell
+     ssh-keygen -t ed25519 -C "your@email.com"
+    ```
 
 3. Add some config, for GitHub for example (add the public key on GitHub to auto auth):
 
@@ -480,107 +479,107 @@ Please be aware that these names should be substituted with the actual device pa
 
 1. Create the partition:
 
-   ```
-   Command (m for help): n
-   Partition number: <Press Enter>
-   First sector: <Press Enter>
-   Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
-   
-   Command (m for help): t
-   Partition type or alias (type L to list all): linux
-   ```
+    ```shell
+    Command (m for help): n
+    Partition number: <Press Enter>
+    First sector: <Press Enter>
+    Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
+
+    Command (m for help): t
+    Partition type or alias (type L to list all): linux
+    ```
 
 2. Use cryptsetup to encrypt device:
 
-   ```shell
-   cryptsetup --use-urandom luksFormat /dev/<backup-disk-partition>
-   ```
+    ```shell
+    cryptsetup --use-urandom luksFormat /dev/<backup-disk-partition>
+    ```
 
 3. Open:
 
-   ```shell
-   cryptsetup open /dev/<backup-disk-partition> <YourBackupName>
-   ```
+    ```shell
+    cryptsetup open /dev/<backup-disk-partition> <YourBackupName>
+    ```
 
 4. Make the filesystem:
 
-   ```shell
-   mkfs.ext4 /dev/mapper/<YourBackupName>
-   ```
+    ```shell
+    mkfs.ext4 /dev/mapper/<YourBackupName>
+    ```
 
 **Optional, just for automation:**
 
 1. Create keyfile:
 
-   ```shell
-   openssl genrsa -out <path/to/key> 4096
-   ```
+    ```shell
+    openssl genrsa -out <path/to/key> 4096
+    ```
 
 2. Add key to encrypted device:
 
-   ```shell
-   cryptsetup luksAddKey /dev/<external-disk> <path/to/key>
-   ```
+    ```shell
+    cryptsetup luksAddKey /dev/<external-disk> <path/to/key>
+    ```
 
 3. Add device to /etc/crypttab for autodecrypt it:
 
-   ```shell
-   vim /etc/crypttab
-   
-   # <device-name>       UUID=<device-UUID-code>      <path/to/key>    luks,<options>
-   
-   # Example don't using keyfile
-   # BACKUP      UUID=738c6426-3ef5-48d5-a837-b437c722802f       -       luks
-   
-   # Example using
-   # BACKUP      UUID=73481cae-1b80-400c-bef3-4f4a2b2a9a1e       /root/backup-key        luks
-   ```
+    ```shell
+    vim /etc/crypttab
+
+    # <device-name>       UUID=<device-UUID-code>      <path/to/key>    luks,<options>
+
+    # Example don't using keyfile
+    # BACKUP      UUID=738c6426-3ef5-48d5-a837-b437c722802f       -       luks
+
+    # Example using
+    # BACKUP      UUID=73481cae-1b80-400c-bef3-4f4a2b2a9a1e       /root/backup-key        luks
+    ```
 
 4. Add the external drive to /etc/fstab to automount (sometimes useless):
 
-   ```shell
-   # To help you with information about mounted drive (don't simply overwrite fstab)
-   genfstab -U /
-   
-   vim /etc/fstab
-   
-   # UUID=<device-UUID-code>     <path/to/mount> <type> <options>  <dump>  <fsck>
-   
-   # For example
-   # UUID=8d90233f-36ff-434d-bc5a-de6d596719f1       /run/timeshift/backup   ext4            rw,relatime     0 2
-   ```
+    ```shell
+    # To help you with information about mounted drive (don't simply overwrite fstab)
+    genfstab -U /
+
+    vim /etc/fstab
+
+    # UUID=<device-UUID-code>     <path/to/mount> <type> <options>  <dump>  <fsck>
+
+    # For example
+    # UUID=8d90233f-36ff-434d-bc5a-de6d596719f1       /run/timeshift/backup   ext4            rw,relatime     0 2
+    ```
 
 ### Zram Implementation (Recommended)
 
 1. Install the `zram-generator` package:
 
-   ```shell
-   pacman -Syu zram-generator
-   ```
+    ```shell
+    pacman -Syu zram-generator
+    ```
 
 2. Configure zram by creating a configuration file. This example allocates 50% of your RAM memory (or the min of 4096MiB):
 
-   ```shell
-   # /etc/systemd/zram-generator.conf
-   [zram0]
-   zram-size = ram / 2
-   compression-algorithm = zstd
-   ```
+    ```shell
+    # /etc/systemd/zram-generator.conf
+    [zram0]
+    zram-size = ram / 2
+    compression-algorithm = zstd
+    ```
 
-3. Use  `sytemctl` to enable the `zram-generator`:
+3. Use `sytemctl` to enable the `zram-generator`:
 
-   ```shell
-   systemctl daemeon-reload
-   
-   # The number after "zram" may be other 
-   systemctl start systemd-zram-setup@zram0 
-   ```
+    ```shell
+    systemctl daemeon-reload
+
+    # The number after "zram" may be other
+    systemctl start systemd-zram-setup@zram0
+    ```
 
 4. Reboot, verify the zram device is active:
 
-   ```shell
-   swapon --show
-   ```
+    ```shell
+    swapon --show
+    ```
 
 ### Setting up Snapper
 
@@ -589,7 +588,7 @@ The BTRFS layout in this guide was designed to work correctly with Snapper, a po
 Here is the correct procedure to set up Snapper after the system is installed and you have rebooted into it.
 
 1. Install dependencies
-  
+
     ```shell
     pacman -Syu snapper snap-pac grub-btrfs inotify-tools
     ```
@@ -637,7 +636,7 @@ This is a critical step with a non-obvious workaround. The `snapper` command exp
 
 1. Add initial configs
 
-    ```shell
+    ```
     #/etc/snapper/configs/config
     TIMELINE_MIN_AGE="1800"
     TIMELINE_LIMIT_HOURLY="5"
@@ -689,7 +688,6 @@ It is important to make a backup of LUKS header so that you can access your data
 ## References
 
 - **Arch Wiki Main Guides:**
-  
     - [Installation guide](https://wiki.archlinux.org/title/Installation_guide)
     - [Btrfs](https://wiki.archlinux.org/title/Btrfs)
     - [Snapper](https://wiki.archlinux.org/title/Snapper)
@@ -699,6 +697,4 @@ It is important to make a backup of LUKS header so that you can access your data
     - [greetd](https://wiki.archlinux.org/title/Greetd)
 
 - **Original Inspirations:**
-  
     - <https://gist.github.com/mattiaslundberg/8620837>
-

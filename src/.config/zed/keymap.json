@@ -13,14 +13,14 @@
     }
   },
   {
-    "bindings": {
-      "ctrl-;": "terminal_panel::ToggleFocus"
-    }
-  },
-  {
     "context": "Editor",
     "bindings": {
       "ctrl-s": "workspace::Save"
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-;": "terminal_panel::Toggle"
     }
   }
 ]
