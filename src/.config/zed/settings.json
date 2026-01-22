@@ -10,8 +10,9 @@
 	"buffer_line_height": "comfortable",
 	"buffer_font_weight": 400.0,
 	"terminal": {
-		"font_family": "FiraCode Nerd Font Mono",
-  "env": {}
+		"font_size": 14.0,
+  "font_family": "FiraCode Nerd Font Mono",
+		"env": {}
 	},
 	"project_panel": {
 		"auto_fold_dirs": false
@@ -86,10 +87,17 @@
 		"GraphQL": { "formatter": { "language_server": { "name": "biome" } } }
 	},
 	"lsp": {
-        "biome": {
-            "settings": {
-                "require_config_file": true
-            }
-        }
+		"biome": {
+			"settings": {
+				"require_config_file": false
+			}
+		},
+		"jdtls": {
+			"settings": {
+				"lombok_support": true,
+				"jdk_auto_download": true,
+				"check_updates": "always"
+			}
+		}
 	}
 }

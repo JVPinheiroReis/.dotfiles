@@ -1,4 +1,7 @@
 #!/bin/sh
+
+set -e
+
 sleep 1
 killall -e xdg-desktop-portal-hyprland
 killall xdg-desktop-portal

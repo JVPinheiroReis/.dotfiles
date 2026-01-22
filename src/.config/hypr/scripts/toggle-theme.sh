@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 current_theme=$(dconf read /org/gnome/desktop/interface/color-scheme)
 
 if [[ $current_theme == "'prefer-dark'" ]]; then

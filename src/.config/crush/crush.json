@@ -1,0 +1,14 @@
+{
+    "models": {
+        "large": {
+            "model": "gemini-3-flash-preview",
+            "provider": "gemini",
+            "max_tokens": 50000
+        },
+        "small": {
+            "model": "gemini-2.5-flash",
+            "provider": "gemini",
+            "max_tokens": 50000
+        }
+    }
+}
