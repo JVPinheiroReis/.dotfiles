@@ -1,9 +1,16 @@
 import { GObject } from "astal";
-import { astalify, ConstructProps, App, Astal, Gdk, Gtk } from "astal/gtk3"
+import {
+	App,
+	Astal,
+	astalify,
+	type ConstructProps,
+	Gdk,
+	Gtk,
+} from "astal/gtk3";
 
 class CalendarGtk extends astalify(Gtk.Calendar) {
 	static {
-		GObject.registerClass(this);
+		GObject.registerClass(CalendarGtk);
 	}
 
 	constructor(
@@ -14,24 +21,22 @@ class CalendarGtk extends astalify(Gtk.Calendar) {
 }
 
 export default function Calendar() {
-    const anchor = Astal.WindowAnchor.TOP
-        | Astal.WindowAnchor.RIGHT
+	const anchor = Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT;
 
-    return <window 
-    name="calendar"
-    visible={false} 
-    application={App}
-    anchor={anchor}
-    >
-    <box 
-    className="calendar"
-    >{new CalendarGtk({ 
-        hexpand: true, 
-        vexpand: true,
-        showDayNames: true,
-        showDetails: false,
-        showHeading: true,
-        showWeekNumbers: true
-    })}</box>
-</window>
+	return (
+		<window name="calendar" visible={false} application={App} anchor={anchor}>
+			<box className="calendar">
+				{
+					new CalendarGtk({
+						hexpand: true,
+						vexpand: true,
+						showDayNames: true,
+						showDetails: false,
+						showHeading: true,
+						showWeekNumbers: true,
+					})
+				}
+			</box>
+		</window>
+	);
 }

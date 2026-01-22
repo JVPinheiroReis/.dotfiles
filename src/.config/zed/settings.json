@@ -11,7 +11,7 @@
 	"buffer_font_weight": 400.0,
 	"terminal": {
 		"font_size": 14.0,
-  "font_family": "FiraCode Nerd Font Mono",
+		"font_family": "FiraCode Nerd Font Mono",
 		"env": {}
 	},
 	"project_panel": {
@@ -40,6 +40,7 @@
 	"wrap_guides": [80, 120],
 	"soft_wrap": "editor_width",
 	"tab_size": 4,
+	"hard_tabs": false,
 	"icon_theme": {
 		"mode": "system",
 		"light": "Zed (Default)",
