@@ -7,18 +7,22 @@ alias l='eza -lah --icons=always'
 alias lt='eza --tree --icons=always'
 alias t='trash-put'
 alias tc='rm -rf ~/.local/share/Trash/*'
-alias y='yt-dlp -o "%(title)s.%(ext)s" --cookies-from-browser firefox'
-alias adl='y -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format mp3'
-alias vdl='y -f "bestaudio[ext=m4a]+bestvideo*[ext=mp4]/best[ext=mp4]/best"'
-alias mdl='y -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format flac --audio-quality 0'
+alias y='yt-dlp -o "%(title)s.%(ext)s"'
+alias yc='yt-dlp -o "%(title)s.%(ext)s" --cookies-from-browser firefox'
+alias ya='y -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format mp3'
+alias yv='y -f "bestaudio[ext=m4a]+bestvideo*[ext=mp4]/best[ext=mp4]/best"'
+alias ym='y -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format m4a --audio-quality 0'
+alias yca='yc -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format mp3'
+alias ycv='yc -f "bestaudio[ext=m4a]+bestvideo*[ext=mp4]/best[ext=mp4]/best"'
+alias ycm='yc -f "bestaudio[ext=m4a]/bestaudio/best" -x --audio-format m4a --audio-quality 0'
 alias v='vim'
 alias nv='nvim'
 alias yz='yazi'
 alias z='zeditor'
 
 # -----------------------------------------------------
-# Git 
-# ----------------------------------------------------- 
+# Git
+# -----------------------------------------------------
 
 alias git='nocorrect git'
 alias g="git"
