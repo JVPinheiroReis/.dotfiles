@@ -7,5 +7,20 @@
 		"key": "ctrl+enter",
 		"command": "-github.copilot.generate",
 		"when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
-	}
+    },
+    {
+        "key": "ctrl+;",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+shift+[BracketLeft]",
+        "command": "-workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+shift+;",
+        "command": "-breadcrumbs.focus",
+        "when": "breadcrumbsPossible && breadcrumbsVisible"
+    }
 ]

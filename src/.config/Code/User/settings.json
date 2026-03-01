@@ -1,6 +1,5 @@
 {
-	"breadcrumbs.enabled": false,
-	"debug.onTaskErrors": "debugAnyway",
+    "debug.onTaskErrors": "debugAnyway",
 	"editor.colorDecorators": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.detectIndentation": false,
