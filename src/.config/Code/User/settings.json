@@ -1,5 +1,6 @@
 {
-    "debug.onTaskErrors": "debugAnyway",
+	"debug.onTaskErrors": "debugAnyway",
+	"editor.autoClosingQuotes": "always",
 	"editor.colorDecorators": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.detectIndentation": false,
@@ -26,10 +27,10 @@
 			{
 				"scope": "string.quoted",
 				"settings": {
-					"foreground": "#ffffff"
-				}
-			}
-		]
+					"foreground": "#ffffff",
+				},
+			},
+		],
 	},
 	"explorer.compactFolders": false,
 	"explorer.confirmDelete": false,
@@ -38,14 +39,14 @@
 	"explorer.fileNesting.patterns": {
 		"package.json": ".eslint*, eslint.config.*, prettier*, .prettier*, tsconfig*, vite*, pnpm-*, bun.lockb, nest*, package-lock*",
 		"tailwind.config.*": "tailwind.config*, postcss.config*",
-		".env": "env*, .env*, venv*, .venv*"
+		".env": "env*, .env*, venv*, .venv*",
 	},
 	"emmet.includeLanguages": {
-		"django-html": "html"
+		"django-html": "html",
 	},
 	"files.associations": {
 		"**/templates/*.html": "django-html",
-		"*.yaml": "yaml"
+		"*.yaml": "yaml",
 	},
 	"git.confirmSync": false,
 	"git.defaultBranchName": "master",
@@ -54,7 +55,7 @@
 		"*": false,
 		"plaintext": false,
 		"markdown": false,
-		"scminput": false
+		"scminput": false,
 	},
 	"github.gitAuthentication": true,
 	"gitlens.codeLens.recentChange.enabled": false,
@@ -67,12 +68,16 @@
 		"-c",
 		"%DIR%/",
 		"%TMPFILE%",
-		"-y=defaultIndent: '%INDENT%'"
+		"-y=defaultIndent: '%INDENT%'",
 	],
 	"liveServer.settings.donotShowInfoMsg": true,
 	"liveServer.settings.CustomBrowser": "firefox",
+	"makefile.configureOnOpen": true,
+	"markdown-preview-enhanced.previewTheme": "github-dark.css",
+	"markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
 	"notebook.defaultFormatter": "esbenp.prettier-vscode",
 	"python.createEnvironment.trigger": "off",
+	"python.defaultInterpreterPath": "/bin/python",
 	"prettier.useTabs": true,
 	"prettier.requireConfig": false,
 	"prettier.tabWidth": 4,
@@ -88,7 +93,7 @@
 		".env.local": "gear",
 		".env.sst": "gear",
 		".env.example": "gear",
-		"*.ndjson": "brackets-orange"
+		"*.ndjson": "brackets-orange",
 	},
 	"terminal.integrated.defaultProfile.linux": "zsh",
 	"typescript.updateImportsOnFileMove.enabled": "always",
@@ -98,13 +103,15 @@
 	"window.menuBarVisibility": "compact",
 	"window.titleBarStyle": "custom",
 	"workbench.colorCustomizations": {
-		"sideBar.foreground": "#ffffff"
+		"sideBar.foreground": "#ffffff",
 	},
 	"workbench.editor.labelFormat": "short",
 	"workbench.externalBrowser": "chromium",
 	"workbench.settings.applyToAllProfiles": ["editor.fontFamily"],
 	"workbench.startupEditor": "newUntitledFile",
 	"workbench.tree.renderIndentGuides": "always",
+	"workbench.activityBar.location": "hidden",
+	"workbench.editor.empty.hint": "hidden",
 	"window.commandCenter": false,
 	"window.zoomLevel": 1,
 	"terminal.integrated.env.linux": {},
@@ -115,18 +122,16 @@
 	"yaml.format.proseWrap": "preserve",
 	"[github-actions-workflow]": {
 		"editor.autoIndent": "advanced",
-		"editor.defaultFormatter": "redhat.vscode-yaml"
+		"editor.defaultFormatter": "redhat.vscode-yaml",
 	},
 	"[python]": {
-		"editor.defaultFormatter": "charliermarsh.ruff"
+		"editor.defaultFormatter": "charliermarsh.ruff",
 	},
 	"[yaml]": {
 		"editor.tabSize": 2,
 		"editor.insertSpaces": true,
-		"editor.defaultFormatter": "redhat.vscode-yaml"
+		"editor.defaultFormatter": "redhat.vscode-yaml",
 	},
-	"makefile.configureOnOpen": true,
-	"editor.autoClosingQuotes": "always",
 	"[dockercompose]": {
 		"editor.insertSpaces": true,
 		"editor.tabSize": 2,
@@ -134,31 +139,29 @@
 		"editor.quickSuggestions": {
 			"other": true,
 			"comments": false,
-			"strings": true
+			"strings": true,
 		},
-		"editor.defaultFormatter": "redhat.vscode-yaml"
+		"editor.defaultFormatter": "redhat.vscode-yaml",
 	},
 	"yaml.schemas": {
 		"file:///home/Admin/.vscode/extensions/continue.continue-1.2.11-linux-x64/config-yaml-schema.json": [
-			".continue/**/*.yaml"
-		]
+			".continue/**/*.yaml",
+		],
 	},
 	"C_Cpp.intelliSenseEngine": "disabled",
 	"[c]": {
-		"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+		"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
 	},
 	"[cpp]": {
-		"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+		"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
 	},
 	"[rust]": {
-		"editor.defaultFormatter": "rust-lang.rust-analyzer"
+		"editor.defaultFormatter": "rust-lang.rust-analyzer",
 	},
-	"workbench.activityBar.location": "hidden",
-	"workbench.editor.empty.hint": "hidden",
-	"python.defaultInterpreterPath": "/bin/python",
 	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml"
+		"editor.defaultFormatter": "redhat.vscode-xml",
 	},
-	"markdown-preview-enhanced.previewTheme": "github-dark.css",
-	"markdown-preview-enhanced.codeBlockTheme": "github-dark.css"
+	"[astro]": {
+		"editor.defaultFormatter": "astro-build.astro-vscode",
+	},
 }
