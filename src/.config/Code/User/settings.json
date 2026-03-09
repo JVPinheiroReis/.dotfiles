@@ -5,7 +5,7 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.detectIndentation": false,
 	"editor.formatOnSave": true,
-	"editor.fontFamily": "JetBrains Mono Nerd Font Mono",
+	"editor.fontFamily": "FiraCode Nerd Font Mono",
 	"editor.fontLigatures": false,
 	"editor.fontSize": 14,
 	"editor.fontWeight": "450",
@@ -22,16 +22,6 @@
 	"editor.suggestSelection": "first",
 	"editor.tabSize": 4,
 	"editor.wordWrap": "on",
-	"editor.tokenColorCustomizations": {
-		"textMateRules": [
-			{
-				"scope": "string.quoted",
-				"settings": {
-					"foreground": "#ffffff",
-				},
-			},
-		],
-	},
 	"explorer.compactFolders": false,
 	"explorer.confirmDelete": false,
 	"explorer.confirmDragAndDrop": false,
@@ -102,9 +92,6 @@
 	"window.confirmSaveUntitledWorkspace": false,
 	"window.menuBarVisibility": "compact",
 	"window.titleBarStyle": "custom",
-	"workbench.colorCustomizations": {
-		"sideBar.foreground": "#ffffff",
-	},
 	"workbench.editor.labelFormat": "short",
 	"workbench.externalBrowser": "chromium",
 	"workbench.settings.applyToAllProfiles": ["editor.fontFamily"],
@@ -164,4 +151,5 @@
 	"[astro]": {
 		"editor.defaultFormatter": "astro-build.astro-vscode",
 	},
+	"window.autoDetectColorScheme": true,
 }
