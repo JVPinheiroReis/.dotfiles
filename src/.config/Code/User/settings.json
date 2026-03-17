@@ -1,6 +1,6 @@
 {
 	"debug.onTaskErrors": "debugAnyway",
-	"editor.autoClosingQuotes": "always",
+	"editor.autoClosingQuotes": "beforeWhitespace",
 	"editor.colorDecorators": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.detectIndentation": false,
@@ -152,4 +152,7 @@
 		"editor.defaultFormatter": "astro-build.astro-vscode",
 	},
 	"window.autoDetectColorScheme": true,
+	"[go]": {
+		"editor.defaultFormatter": "golang.go",
+	},
 }
