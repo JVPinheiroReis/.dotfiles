@@ -63,7 +63,7 @@
 	"liveServer.settings.donotShowInfoMsg": true,
 	"liveServer.settings.CustomBrowser": "firefox",
 	"makefile.configureOnOpen": true,
-	"markdown-preview-enhanced.previewTheme": "github-dark.css",
+	"markdown-preview-enhanced.previewTheme": "atom-light.css",
 	"markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
 	"notebook.defaultFormatter": "esbenp.prettier-vscode",
 	"python.createEnvironment.trigger": "off",
