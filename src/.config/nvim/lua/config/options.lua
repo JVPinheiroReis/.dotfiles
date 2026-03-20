@@ -1,4 +1,4 @@
-vim.g.lazyvim_prettier_needs_config = true
+vim.g.lazyvim_prettier_needs_config = false
 
 vim.opt.relativenumber = false
 vim.opt.laststatus = 0
