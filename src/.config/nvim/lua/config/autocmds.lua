@@ -6,3 +6,26 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
+-- SQL keymap fixes
+vim.api.nvim_create_autocmd("Filetype", {
+  pattern = "sql",
+  callback = function()
+    vim.keymap.del("i", "<left>", { buffer = true })
+    vim.keymap.del("i", "<right>", { buffer = true })
+  end,
+})
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.defer_fn(function()
+      vim.cmd("silent !kitty @ set-spacing padding=0")
+    end, 100)
+  end,
+})
+
+vim.api.nvim_create_autocmd("VimLeave", {
+  callback = function()
+    vim.cmd("silent !kitty @ set-spacing padding=default")
+  end,
+})
