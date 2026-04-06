@@ -5,11 +5,12 @@ return {
     priority = 1000,
     opts = {},
   },
-  { "EdenEast/nightfox.nvim" },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "marko-cerovac/material.nvim" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "carbonfox",
+      colorscheme = "tokyonight-night",
     },
   },
 }
