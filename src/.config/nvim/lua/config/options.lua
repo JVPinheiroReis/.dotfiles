@@ -1,4 +1,6 @@
-vim.g.lazyvim_prettier_needs_config = false
+vim.g.lazyvim_prettier_needs_config = true
+vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_ruff = "ruff"
 
 vim.opt.relativenumber = false
 vim.opt.laststatus = 0
