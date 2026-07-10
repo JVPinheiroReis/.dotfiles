@@ -2,13 +2,13 @@
 
 ## Included Guides
 
-- **GRUB Bootloader** (inclu)
-- **LUKS encryption** (included)
-- **BTRFS filesystem with subvolumes** (included)
-- **UEFI mode** (included)
-- **Systemd-based initramfs** (included)
-- **Zram implementation** (included)
-- **Autologin with `greetd`** (included)
+- **GRUB Bootloader**
+- **LUKS encryption**
+- **BTRFS filesystem with subvolumes**
+- **UEFI mode**
+- **Systemd-based initramfs**
+- **Zram implementation**
+- **Autologin with `greetd`**
 
 If you're only interested in installing Linux and not setting up dual boot with Windows, feel free to skip the Windows-related sections.
 
