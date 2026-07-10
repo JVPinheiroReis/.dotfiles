@@ -17,9 +17,7 @@ If you're only interested in installing Linux and not setting up dual boot with 
 Before we dive into the installation process, let's ensure that your system is ready:
 
 - **Data Backup:** Make sure you've backed up all your important data. We're about to make significant changes, and it's always wise to have a safety net.
-
 - **UEFI Mode:** In your system's firmware settings (BIOS/UEFI), enable the UEFI boot mode. Note that this option may be unavailable on very old hardware.
-
 - **Secure Boot:** You must disable Secure Boot in your UEFI settings to allow the unsigned Arch Linux installation media to boot.
 
 ## Prepare the USB Drive
@@ -29,14 +27,23 @@ Before we dive into the installation process, let's ensure that your system is r
 
 ## Disk and Filesystem Structure
 
-The installation process will create the following physical partition scheme on your drive:
+The installation process will create the following partition scheme on your drive:
 
-| Partition          | Size  | Mount Point | Filesystem | Notes                      |
-| ------------------ | ----- | ----------- | ---------- | -------------------------- |
-| `/dev/<efi-disk>`  | +512M | `/boot/efi` | FAT32      | EFI System Partition       |
-| `/dev/<boot-disk>` | +1GB  | `/boot`     | ext4       | Unencrypted boot partition |
+| Device         | Filesystem  | In this Doc        | Examples                      |
+| -------------- | ----------- | ------------------ | ----------------------------- |
+| Disk Device    | -           | `/dev/<your-disk>` | `/dev/sda`, `/dev/nvme0n1`    |
+| EFI Partition  | FAT32       | `/dev/<efi-disk>`  | `/dev/sda5`, `/dev/nvme0n1p1` |
+| Boot Partition | ext4        | `/dev/<boot-disk>` | `/dev/sda6`, `/dev/nvme0n1p2` |
+| LUKS Partition | crypto_LUKS | `/dev/<luks-disk>` | `/dev/sda7`, `/dev/nvme0n1p3` |
 
-Inside the LUKS container (`/dev/mapper/cryptroot`), we will set up a BTRFS filesystem with the following subvolume layout:
+The mount points:
+| Partition | Size | Mount Point |
+| ------------------ | ----- | ----------- |
+| `/dev/<efi-disk>` | +512M | `/boot/efi` |
+| `/dev/<boot-disk>` | +1GB | `/boot` |
+| `/dev/<luks-disk>` | rest | - |
+
+Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), we will set up a BTRFS filesystem with the following subvolume layout:
 
 | BTRFS Subvolume | Mount Point             | Purpose                     |
 | --------------- | ----------------------- | --------------------------- |
@@ -45,15 +52,6 @@ Inside the LUKS container (`/dev/mapper/cryptroot`), we will set up a BTRFS file
 | `@log`          | `/var/log`              | System log files            |
 | `@pkg`          | `/var/cache/pacman/pkg` | Pacman package cache        |
 | `@.snapshots`   | `/.snapshots`           | For storing BTRFS snapshots |
-
-Please be aware that these names should be substituted with the actual device paths relevant to your system configuration:
-
-| Device         | In this Doc        | Examples                      |
-| :------------- | ------------------ | :---------------------------- |
-| Disk Device    | `/dev/<your-disk>` | `/dev/sda`, `/dev/nvme0n1`    |
-| EFI Partition  | `/dev/<efi-disk>`  | `/dev/sda5`, `/dev/nvme0n1p1` |
-| Boot Partition | `/dev/<boot-disk>` | `/dev/sda6`, `/dev/nvme0n1p2` |
-| LUKS Partition | `/dev/<luks-disk>` | `/dev/sda7`, `/dev/nvme0n1p3` |
 
 ## Install Arch Linux
 
