@@ -473,7 +473,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
        ForwardAgent yes
     ```
 
-### Create Encrypted External Drive
+### Setup Encrypted External Device
 
 1. Create the partition:
 
@@ -490,19 +490,19 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 2. Use cryptsetup to encrypt device:
 
     ```shell
-    cryptsetup --use-urandom luksFormat /dev/<backup-disk-partition>
+    cryptsetup --use-urandom luksFormat /dev/<external-device>
     ```
 
 3. Open:
 
     ```shell
-    cryptsetup open /dev/<backup-disk-partition> <YourBackupName>
+    cryptsetup open /dev/<external-device> <YourDeviceName>
     ```
 
 4. Make the filesystem:
 
     ```shell
-    mkfs.ext4 /dev/mapper/<YourBackupName>
+    mkfs.ext4 /dev/mapper/<YourDeviceName>
     ```
 
 **Optional, just for automation:**
@@ -516,7 +516,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 2. Add key to encrypted device:
 
     ```shell
-    cryptsetup luksAddKey /dev/<external-disk> <path/to/key>
+    cryptsetup luksAddKey /dev/<external-device> <path/to/key>
     ```
 
 3. Add device to /etc/crypttab for autodecrypt it:
