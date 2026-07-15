@@ -1,0 +1,8 @@
+style: "auto"
+mouse: true
+pager: true
+width: 80
+all: true
+
+showLineNumbers: true
+preserveNewLines: true

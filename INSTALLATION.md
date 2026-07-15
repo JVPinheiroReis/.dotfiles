@@ -95,19 +95,19 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     Created a new GPT disklabel (GUID: ...).
     ```
 
-    1. Create the EFI partition (`/dev/<efi-disk>`):
+8.  Create the EFI partition (`/dev/<efi-disk>`):
 
-        ```shell
-        Command (m for help): n
-        Partition number: <Press Enter>
-        First sector: <Press Enter>
-        Last sector, +/-sectors or +/-size{K,M,G,T,P}: +512M
+    ```shell
+    Command (m for help): n
+    Partition number: <Press Enter>
+    First sector: <Press Enter>
+    Last sector, +/-sectors or +/-size{K,M,G,T,P}: +512M
 
-        Command (m for help): t
-        Partition type or alias (type L to list all): uefi
-        ```
+    Command (m for help): t
+    Partition type or alias (type L to list all): uefi
+    ```
 
-8.  Create the Boot partition (`/dev/<boot-disk>`):
+9.  Create the Boot partition (`/dev/<boot-disk>`):
 
     ```shell
     Command (m for help): n
@@ -119,7 +119,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     Partition type or alias (type L to list all): linux
     ```
 
-9.  Create the LUKS partition (`/dev/<luks-disk>`):
+10. Create the LUKS partition (`/dev/<luks-disk>`):
 
     ```shell
     Command (m for help): n
@@ -131,39 +131,39 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     Partition type or alias (type L to list all): linux
     ```
 
-10. Print the partition table using the `p` command and check that everything is OK:
+11. Print the partition table using the `p` command and check that everything is OK:
 
     ```shell
     Command (m for help): p
     ```
 
-11. Write changes to the disk using the `w` command. (Make sure you know what you're doing before running this command).
+12. Write changes to the disk using the `w` command. (Make sure you know what you're doing before running this command).
 
     ```shell
     Command (m for help): w
     ```
 
-12. Format the EFI and Boot Partitions:
+13. Format the EFI and Boot Partitions:
 
     ```shell
     mkfs.fat -F 32 /dev/<efi-disk>
     mkfs.ext4 /dev/<boot-disk>
     ```
 
-13. Set up the encrypted partition. This will contain your BTRFS filesystem. Let's call the mapped device `cryptroot` for clarity.
+14. Set up the encrypted partition. This will contain your BTRFS filesystem. Let's call the mapped device `cryptroot` for clarity.
 
     ```shell
     cryptsetup --use-urandom luksFormat /dev/<luks-disk>
     cryptsetup open /dev/<luks-disk> cryptroot
     ```
 
-14. Format the encrypted partition with BTRFS. The `-L` flag sets a label for the filesystem.
+15. Format the encrypted partition with BTRFS. The `-L` flag sets a label for the filesystem.
 
     ```shell
     mkfs.btrfs -L Arch /dev/mapper/cryptroot
     ```
 
-15. Create BTRFS Subvolumes.
+16. Create BTRFS Subvolumes.
 
     First, mount the encrypted BTRFS volume to a temporary directory:
 
@@ -187,7 +187,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     umount /mnt
     ```
 
-16. Mount the Core Filesystems.
+17. Mount the Core Filesystems.
 
     Now we will mount our newly created subvolumes, along with the boot partitions, to their final destinations under `/mnt`.
 
@@ -209,7 +209,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     mount --mkdir /dev/<efi-disk> /mnt/boot/efi
     ```
 
-17. Mount the Remaining BTRFS Subvolumes.
+18. Mount the Remaining BTRFS Subvolumes.
 
     First, create the necessary directories for the subvolume mount points:
 
@@ -226,7 +226,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     mount -o compress=zstd,ssd,noatime,subvol=@.snapshots /dev/mapper/cryptroot /mnt/.snapshots
     ```
 
-18. Install the base system. We will also install microcode (for CPU bug fixes) and some useful packages like `git`, `vim`, and `sudo`. **Choose the correct microcode package for your CPU**.
+19. Install the base system. We will also install microcode (for CPU bug fixes) and some useful packages like `git`, `vim`, and `sudo`. **Choose the correct microcode package for your CPU**.
 
     ```shell
     # For AMD CPUs:
@@ -236,7 +236,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     pacstrap -K /mnt base base-devel linux linux-firmware intel-ucode btrfs-progs mesa plymouth openssh git vim sudo
     ```
 
-19. Generate `/etc/fstab`. This file can be used to define how disk partitions, various other block devices, or remote filesystems should be mounted into the filesystem:
+20. Generate `/etc/fstab`. This file can be used to define how disk partitions, various other block devices, or remote filesystems should be mounted into the filesystem:
 
     ```shell
     genfstab -U /mnt > /mnt/etc/fstab
@@ -245,15 +245,15 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     cat /mnt/etc/fstab
     ```
 
-20. Enter the new system:
+21. Enter the new system:
 
     ```shell
     arch-chroot /mnt /bin/bash
     ```
 
-21. Execute `step 3` operation.
+22. Execute `step 3` operation.
 
-22. Set TimeZone:
+23. Set TimeZone:
 
     ```shell
     # See available timezones:
@@ -263,13 +263,13 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
     ```
 
-23. Run hwclock(8) to generate `/etc/adjtime`:
+24. Run hwclock(8) to generate `/etc/adjtime`:
 
     ```shell
     hwclock --systohc
     ```
 
-24. Set Locale:
+25. Set Locale:
 
     ```shell
     vim /etc/locale.gen
@@ -280,13 +280,13 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     echo LANG=en_US.UTF-8 > /etc/locale.conf
     ```
 
-25. Set hostname:
+26. Set hostname:
 
     ```shell
     echo YourHostName > /etc/hostname
     ```
 
-26. Create a user:
+27. Create a user:
 
     ```shell
     useradd -m -G wheel --shell /bin/bash YourUserName
@@ -297,7 +297,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     # Uncomment %wheel ALL=(ALL) ALL
     ```
 
-27. Make keyboard config persistent:
+28. Make keyboard config persistent:
 
     ```shell
     vim /etc/vconsole.conf
@@ -305,7 +305,7 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     # KEYMAP=<keyboard-layout>
     ```
 
-28. Configure `mkinitcpio` with modules needed to create the systemd-based initramfs image:
+29. Configure `mkinitcpio` with modules needed to create the systemd-based initramfs image:
 
     ```shell
     vim /etc/mkinitcpio.conf
@@ -313,13 +313,13 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     # HOOKS=(base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)
     ```
 
-29. Recreate the initramfs image:
+30. Recreate the initramfs image:
 
     ```shell
     mkinitcpio -P
     ```
 
-30. Setup systemd-boot:
+31. Setup systemd-boot:
 
     ```shell
     pacman -S grub efibootmgr
@@ -327,13 +327,17 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
     ```
 
-    In `/etc/default/grub` edit the line `GRUB_CMDLINE_LINUX`. This tells GRUB to unlock the encrypted partition and specifies the root filesystem. Replace `<luks-disk-UUID-code>` with your LUKS partition's UUID (you can find this with `lsblk -f` or `blkid`).
+32. In `/etc/default/grub` edit the line `GRUB_CMDLINE_LINUX`. This tells GRUB to unlock the encrypted partition and specifies the root filesystem. Replace `<luks-disk-UUID-code>` with your LUKS partition's UUID (you can find this with `lsblk -f` or `blkid`).
 
-        GRUB_CMDLINE_LINUX="rd.luks.name=<luks-disk-UUID-code>=cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"
+    ```shell
+    GRUB_CMDLINE_LINUX="rd.luks.name=<luks-disk-UUID-code>=cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"
+    ```
 
     Furthermore, for customization, add configs for boot screen:
 
-        GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+    ```shell
+    GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+    ```
 
     Now generate the main GRUB configuration file:
 
@@ -341,37 +345,37 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
     grub-mkconfig -o /boot/grub/grub.cfg
     ```
 
-31. Install `networkmanager` package and enable `NetworkManager` service to ensure you have Internet connectivity after rebooting:
+33. Install `networkmanager` package and enable `NetworkManager` service to ensure you have Internet connectivity after rebooting:
 
     ```shell
     pacman -S networkmanager
     systemctl enable NetworkManager
     ```
 
-32. Exit new system and unmount all filesystems:
+34. Exit new system and unmount all filesystems:
 
     ```shell
     exit
     umount -R /mnt
     ```
 
-33. Arch is now installed 🎉. Reboot:
+35. Arch is now installed 🎉. Reboot:
 
     ```shell
     reboot
     ```
 
-34. Open BIOS settings and set `GRUB` as first boot priority. Save and exit BIOS settings. After booting the system, you should see the GRUB menu.
+36. Open BIOS settings and set `GRUB` as first boot priority. Save and exit BIOS settings. After booting the system, you should see the GRUB menu.
 
-35. Reboot again and log in to Arch Linux with your username and password.
+37. Reboot again and log in to Arch Linux with your username and password.
 
-36. Check internet connectivity:
+38. Check internet connectivity:
 
     ```shell
     ping google.com
     ```
 
-37. Reboot!
+39. Reboot!
 
 ## Post Installation
 
@@ -593,46 +597,44 @@ Here is the correct procedure to set up Snapper after the system is installed an
 
 2. Create the Snapper Configuration
 
-This is a critical step with a non-obvious workaround. The `snapper` command expects to create the `/.snapshots` directory itself, which conflicts with the subvolume we already have mounted there. Here is how to handle it correctly:
-
-- Umount the `@.snapshots` subvolume that we created during installation:
+3. Umount the `@.snapshots` subvolume that we created during installation:
 
     ```shell
     umount /.snapshots
     ```
 
-- Next, remove the now-empty mountpoint directory:
+4. Next, remove the now-empty mountpoint directory:
 
     ```shell
     rmdir /.snapshots
     ```
 
-- Now, run the snapper command to create a configuration for your root filesystem (`/`). Snapper will automatically create a new `/.snapshots` directory.
+5. Now, run the snapper command to create a configuration for your root filesystem (`/`). Snapper will automatically create a new `/.snapshots` directory.
 
     ```shell
     snapper -c root create-config /
     ```
 
-- Delete the plain directory snapper just made:
+6. Delete the plain directory snapper just made:
 
     ```shell
     rmdir /.snapshots
     ```
 
-- Re-mount all filesystems listed in your `/etc/fstab`, which will include our original `/.snapshots` mount:
+7. Re-mount all filesystems listed in your `/etc/fstab`, which will include our original `/.snapshots` mount:
 
     ```shell
     mount --mkdir -a
     ```
 
-- Finally, verify that your `@.snapshots` subvolume is correctly mounted again:
+8. Finally, verify that your `@.snapshots` subvolume is correctly mounted again:
 
     ```shell
     findmnt --target /.snapshots
     #--> It should show /dev/mapper/cryptroot[/@.snapshots] mounted on /.snapshots
     ```
 
-1. Add initial configs
+9. Add initial configs
 
     ```
     #/etc/snapper/configs/config
@@ -644,7 +646,7 @@ This is a critical step with a non-obvious workaround. The `snapper` command exp
     TIMELINE_LIMIT_YEARLY="0"
     ```
 
-2. Enable Automatic Snapshots and Cleanup
+10. Enable Automatic Snapshots and Cleanup
 
     ```shell
     systemctl enable --now snapper-timeline.timer
@@ -653,13 +655,13 @@ This is a critical step with a non-obvious workaround. The `snapper` command exp
     systemctl enable --now grub-btrfsd.service
     ```
 
-3. Update grub-btrfs.cfg:
+11. Update grub-btrfs.cfg:
 
     ```shell
     /etc/grub.d/41_snapshots-btrfs
     ```
 
-4. Just for test, run it:
+12. Just for test, run it:
 
     ```shell
     grub-mkconfig -o /boot/grub/grub.cfg
@@ -671,13 +673,13 @@ This is a critical step with a non-obvious workaround. The `snapper` command exp
 
 It is important to make a backup of LUKS header so that you can access your data in case of emergency (if your LUKS header somehow gets damaged).
 
-- Create a backup file:
+1. Create a backup file:
 
     ```shell
     sudo cryptsetup luksHeaderBackup /dev/<luks-disk> --header-backup-file luks-header-backup-$(date -I)
     ```
 
-- Store the backup file in a safe place, such as a USB drive. If something bad happens, you can restore the backup header:
+2. Store the backup file in a safe place, such as a USB drive. If something bad happens, you can restore the backup header:
 
     ```shell
     sudo cryptsetup luksHeaderRestore /dev/<luks-disk> --header-backup-file /path/to/backup_header_file
