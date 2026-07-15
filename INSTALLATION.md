@@ -59,311 +59,311 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 
 2.  Set your keyboard layout:
 
-    ```shell
-    loadkeys <keyboard-layout>
-    ```
+```shell
+loadkeys <keyboard-layout>
+```
 
 3.  Set pacman configs, where "number" could be what you want, but not too high:
 
-    ```shell
-    vim /etc/pacman.conf
-
-    # Uncomment and modify:
-    # ParallelDownloads = <number>
-    ```
+```shell
+vim /etc/pacman.conf
+# Uncomment and modify:
+# ParallelDownloads = <number>
+```
 
 4.  Make sure the system is booted in UEFI mode. The following command should display the directory contents without error:
 
-    ```shell
-    ls /sys/firmware/efi/efivars
-    ```
+```shell
+ls /sys/firmware/efi/efivars
+```
 
 5.  Connect to the internet. A wired connection is preferred since it's easier to connect. [More info](https://wiki.archlinux.org/index.php/Installation_guide#Connect_to_the_internet)
 
-    **Note on Device Names:** Before partitioning, identify your disk's name. It will likely be `/dev/sda` or `/dev/vda` for SATA drives (including SSDs and HDDs) or `/dev/nvme0n1` for NVMe drives. Use `lsblk` to list block devices and find the correct name for your system. The guide will use `<your-disk>` as a placeholder.
+**Note on Device Names:** Before partitioning, identify your disk's name. It will likely be `/dev/sda` or `/dev/vda` for SATA drives (including SSDs and HDDs) or `/dev/nvme0n1` for NVMe drives. Use `lsblk` to list block devices and find the correct name for your system. The guide will use `<your-disk>` as a placeholder.
 
 6.  Run `fdisk` and follow until step 11 to create Linux partitions:
 
-    ```shell
-    fdisk /dev/<your-disk>
-    ```
+```shell
+fdisk /dev/<your-disk>
+```
 
 7.  Create an empty GPT partition table using the `g` command. (**WARNING:** This will erase the entire disk.)
 
-    ```
-    Command (m for help): g
-    Created a new GPT disklabel (GUID: ...).
-    ```
+```
+Command (m for help): g
+Created a new GPT disklabel (GUID: ...).
+```
 
 8.  Create the EFI partition (`/dev/<efi-disk>`):
 
-    ```shell
-    Command (m for help): n
-    Partition number: <Press Enter>
-    First sector: <Press Enter>
-    Last sector, +/-sectors or +/-size{K,M,G,T,P}: +512M
+```shell
+Command (m for help): n
+Partition number: <Press Enter>
+First sector: <Press Enter>
+Last sector, +/-sectors or +/-size{K,M,G,T,P}: +512M
 
-    Command (m for help): t
-    Partition type or alias (type L to list all): uefi
-    ```
+Command (m for help): t
+Partition type or alias (type L to list all): uefi
+```
 
 9.  Create the Boot partition (`/dev/<boot-disk>`):
 
-    ```shell
-    Command (m for help): n
-    Partition number: <Press Enter>
-    First sector: <Press Enter>
-    Last sector, +/-sectors or +/-size{K,M,G,T,P}: +1GB
+```shell
+Command (m for help): n
+Partition number: <Press Enter>
+First sector: <Press Enter>
+Last sector, +/-sectors or +/-size{K,M,G,T,P}: +1GB
 
-    Command (m for help): t
-    Partition type or alias (type L to list all): linux
-    ```
+Command (m for help): t
+Partition type or alias (type L to list all): linux
+```
 
 10. Create the LUKS partition (`/dev/<luks-disk>`):
 
-    ```shell
-    Command (m for help): n
-    Partition number: <Press Enter>
-    First sector: <Press Enter>
-    Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
+```shell
+Command (m for help): n
+Partition number: <Press Enter>
+First sector: <Press Enter>
+Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
 
-    Command (m for help): t
-    Partition type or alias (type L to list all): linux
-    ```
+Command (m for help): t
+Partition type or alias (type L to list all): linux
+```
 
 11. Print the partition table using the `p` command and check that everything is OK:
 
-    ```shell
-    Command (m for help): p
-    ```
+```shell
+Command (m for help): p
+```
 
 12. Write changes to the disk using the `w` command. (Make sure you know what you're doing before running this command).
 
-    ```shell
-    Command (m for help): w
-    ```
+```shell
+Command (m for help): w
+```
 
 13. Format the EFI and Boot Partitions:
 
-    ```shell
-    mkfs.fat -F 32 /dev/<efi-disk>
-    mkfs.ext4 /dev/<boot-disk>
-    ```
+```shell
+mkfs.fat -F 32 /dev/<efi-disk>
+mkfs.ext4 /dev/<boot-disk>
+```
 
 14. Set up the encrypted partition. This will contain your BTRFS filesystem. Let's call the mapped device `cryptroot` for clarity.
 
-    ```shell
-    cryptsetup --use-urandom luksFormat /dev/<luks-disk>
-    cryptsetup open /dev/<luks-disk> cryptroot
-    ```
+```shell
+cryptsetup --use-urandom luksFormat /dev/<luks-disk>
+cryptsetup open /dev/<luks-disk> cryptroot
+```
 
 15. Format the encrypted partition with BTRFS. The `-L` flag sets a label for the filesystem.
 
-    ```shell
-    mkfs.btrfs -L Arch /dev/mapper/cryptroot
-    ```
+```shell
+mkfs.btrfs -L Arch /dev/mapper/cryptroot
+```
 
 16. Create BTRFS Subvolumes.
 
-    First, mount the encrypted BTRFS volume to a temporary directory:
+First, mount the encrypted BTRFS volume to a temporary directory:
 
-    ```shell
-    mount /dev/mapper/cryptroot /mnt
-    ```
+```shell
+mount /dev/mapper/cryptroot /mnt
+```
 
-    Use the `btrfs` command to create the subvolumes. The `@` prefix is a common convention to distinguish them from regular directories.
+Use the `btrfs` command to create the subvolumes. The `@` prefix is a common convention to distinguish them from regular directories.
 
-    ```shell
-    btrfs subvolume create /mnt/@
-    btrfs subvolume create /mnt/@home
-    btrfs subvolume create /mnt/@log
-    btrfs subvolume create /mnt/@pkg
-    btrfs subvolume create /mnt/@.snapshots
-    ```
+```shell
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@log
+btrfs subvolume create /mnt/@pkg
+btrfs subvolume create /mnt/@.snapshots
+```
 
-    Now that the subvolumes are created, unmount the top-level volume:
+Now that the subvolumes are created, unmount the top-level volume:
 
-    ```shell
-    umount /mnt
-    ```
+```shell
+umount /mnt
+```
 
 17. Mount the Core Filesystems.
 
-    Now we will mount our newly created subvolumes, along with the boot partitions, to their final destinations under `/mnt`.
+Now we will mount our newly created subvolumes, along with the boot partitions, to their final destinations under `/mnt`.
 
-    **Note on Mount Options:**
-    - `compress=zstd`: Enables transparent compression.
-    - `noatime`: Improves performance by not writing file access times.
-    - `ssd`: Use this if you are installing on an NVMe or a SATA SSD. **Omit this option for traditional Hard Disk Drives (HDDs).**
+**Note on Mount Options:**
 
-    Mount the root subvolume (`@`) to `/mnt`. The following command is for an SSD/NVMe:
+- `compress=zstd`: Enables transparent compression.
+- `noatime`: Improves performance by not writing file access times.
+- `ssd`: Use this if you are installing on an NVMe or a SATA SSD. **Omit this option for traditional Hard Disk Drives (HDDs).**
 
-    ```shell
-    mount -o compress=zstd,ssd,noatime,subvol=@ /dev/mapper/cryptroot /mnt
-    ```
+Mount the root subvolume (`@`) to `/mnt`. The following command is for an SSD/NVMe:
 
-    Next, mount the boot and EFI partitions:
+```shell
+mount -o compress=zstd,ssd,noatime,subvol=@ /dev/mapper/cryptroot /mnt
+```
 
-    ```shell
-    mount --mkdir /dev/<boot-disk> /mnt/boot
-    mount --mkdir /dev/<efi-disk> /mnt/boot/efi
-    ```
+Next, mount the boot and EFI partitions:
+
+```shell
+mount --mkdir /dev/<boot-disk> /mnt/boot
+mount --mkdir /dev/<efi-disk> /mnt/boot/efi
+```
 
 18. Mount the Remaining BTRFS Subvolumes.
 
-    First, create the necessary directories for the subvolume mount points:
+First, create the necessary directories for the subvolume mount points:
 
-    ```shell
-    mkdir -p /mnt/{home,var/log,var/cache/pacman/pkg,.snapshots}
-    ```
+```shell
+mkdir -p /mnt/{home,var/log,var/cache/pacman/pkg,.snapshots}
+```
 
-    Now, mount the remaining subvolumes. Remember to omit the `ssd` option if you are on an HDD.
+Now, mount the remaining subvolumes. Remember to omit the `ssd` option if you are on an HDD.
 
-    ```shell
-    mount -o compress=zstd,ssd,noatime,subvol=@home /dev/mapper/cryptroot /mnt/home
-    mount -o compress=zstd,ssd,noatime,subvol=@log /dev/mapper/cryptroot /mnt/var/log
-    mount -o compress=zstd,ssd,noatime,subvol=@pkg /dev/mapper/cryptroot /mnt/var/cache/pacman/pkg
-    mount -o compress=zstd,ssd,noatime,subvol=@.snapshots /dev/mapper/cryptroot /mnt/.snapshots
-    ```
+```shell
+mount -o compress=zstd,ssd,noatime,subvol=@home /dev/mapper/cryptroot /mnt/home
+mount -o compress=zstd,ssd,noatime,subvol=@log /dev/mapper/cryptroot /mnt/var/log
+mount -o compress=zstd,ssd,noatime,subvol=@pkg /dev/mapper/cryptroot /mnt/var/cache/pacman/pkg
+mount -o compress=zstd,ssd,noatime,subvol=@.snapshots /dev/mapper/cryptroot /mnt/.snapshots
+```
 
 19. Install the base system. We will also install microcode (for CPU bug fixes) and some useful packages like `git`, `vim`, and `sudo`. **Choose the correct microcode package for your CPU**.
 
-    ```shell
-    # For AMD CPUs:
-    pacstrap -K /mnt base base-devel linux linux-firmware amd-ucode btrfs-progs mesa plymouth openssh git vim sudo
+```shell
+# For AMD CPUs:
+pacstrap -K /mnt base base-devel linux linux-firmware amd-ucode btrfs-progs mesa plymouth openssh git vim sudo
 
-    # For Intel CPUs:
-    pacstrap -K /mnt base base-devel linux linux-firmware intel-ucode btrfs-progs mesa plymouth openssh git vim sudo
-    ```
+# For Intel CPUs:
+pacstrap -K /mnt base base-devel linux linux-firmware intel-ucode btrfs-progs mesa plymouth openssh git vim sudo
+```
 
 20. Generate `/etc/fstab`. This file can be used to define how disk partitions, various other block devices, or remote filesystems should be mounted into the filesystem:
 
-    ```shell
-    genfstab -U /mnt > /mnt/etc/fstab
+```shell
+genfstab -U /mnt > /mnt/etc/fstab
 
-    # Check with
-    cat /mnt/etc/fstab
-    ```
+# Check with
+cat /mnt/etc/fstab
+```
 
 21. Enter the new system:
 
-    ```shell
-    arch-chroot /mnt /bin/bash
-    ```
+```shell
+arch-chroot /mnt /bin/bash
+```
 
 22. Execute `step 3` operation.
 
 23. Set TimeZone:
 
-    ```shell
-    # See available timezones:
-    ls /usr/share/zoneinfo/
+```shell
+# See available timezones:
+ls /usr/share/zoneinfo/
 
-    # Set timezone (you may should use other):
-    ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
-    ```
+# Set timezone (you may should use other):
+ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+```
 
 24. Run hwclock(8) to generate `/etc/adjtime`:
 
-    ```shell
-    hwclock --systohc
-    ```
+```shell
+hwclock --systohc
+```
 
 25. Set Locale:
 
-    ```shell
-    vim /etc/locale.gen
-    # uncomment en_US.UTF-8 UTF-8 or another
+```shell
+vim /etc/locale.gen
+# uncomment en_US.UTF-8 UTF-8 or another
 
-    locale-gen
+locale-gen
 
-    echo LANG=en_US.UTF-8 > /etc/locale.conf
-    ```
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+```
 
 26. Set hostname:
 
-    ```shell
-    echo YourHostName > /etc/hostname
-    ```
+```shell
+echo YourHostName > /etc/hostname
+```
 
 27. Create a user:
 
-    ```shell
-    useradd -m -G wheel --shell /bin/bash YourUserName
+```shell
+useradd -m -G wheel --shell /bin/bash YourUserName
 
-    passwd YourUserName
+passwd YourUserName
 
-    visudo
-    # Uncomment %wheel ALL=(ALL) ALL
-    ```
+visudo
+# Uncomment %wheel ALL=(ALL) ALL
+```
 
 28. Make keyboard config persistent:
 
-    ```shell
-    vim /etc/vconsole.conf
+```shell
+vim /etc/vconsole.conf
 
-    # KEYMAP=<keyboard-layout>
-    ```
+# KEYMAP=<keyboard-layout>
+```
 
 29. Configure `mkinitcpio` with modules needed to create the systemd-based initramfs image:
 
-    ```shell
-    vim /etc/mkinitcpio.conf
+```shell
+vim /etc/mkinitcpio.conf
 
-    # HOOKS=(base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)
-    ```
+# HOOKS=(base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)
+```
 
 30. Recreate the initramfs image:
 
-    ```shell
-    mkinitcpio -P
-    ```
+```shell
+mkinitcpio -P
+```
 
 31. Setup systemd-boot:
 
-    ```shell
-    pacman -S grub efibootmgr
+```shell
+pacman -S grub efibootmgr
 
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
-    ```
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+```
 
 32. In `/etc/default/grub` edit the line `GRUB_CMDLINE_LINUX`. This tells GRUB to unlock the encrypted partition and specifies the root filesystem. Replace `<luks-disk-UUID-code>` with your LUKS partition's UUID (you can find this with `lsblk -f` or `blkid`).
 
-    ```shell
-    GRUB_CMDLINE_LINUX="rd.luks.name=<luks-disk-UUID-code>=cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"
-    ```
+```shell
+GRUB_CMDLINE_LINUX="rd.luks.name=<luks-disk-UUID-code>=cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"
+```
 
-    Furthermore, for customization, add configs for boot screen:
+Furthermore, for customization, add configs for boot screen:
 
-    ```shell
-    GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
-    ```
+```shell
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+```
 
-    Now generate the main GRUB configuration file:
+Now generate the main GRUB configuration file:
 
-    ```shell
-    grub-mkconfig -o /boot/grub/grub.cfg
-    ```
+```shell
+grub-mkconfig -o /boot/grub/grub.cfg
+```
 
 33. Install `networkmanager` package and enable `NetworkManager` service to ensure you have Internet connectivity after rebooting:
 
-    ```shell
-    pacman -S networkmanager
-    systemctl enable NetworkManager
-    ```
+```shell
+pacman -S networkmanager
+systemctl enable NetworkManager
+```
 
 34. Exit new system and unmount all filesystems:
 
-    ```shell
-    exit
-    umount -R /mnt
-    ```
+```shell
+exit
+umount -R /mnt
+```
 
 35. Arch is now installed 🎉. Reboot:
 
-    ```shell
-    reboot
-    ```
+```shell
+reboot
+```
 
 36. Open BIOS settings and set `GRUB` as first boot priority. Save and exit BIOS settings. After booting the system, you should see the GRUB menu.
 
@@ -371,9 +371,9 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 
 38. Check internet connectivity:
 
-    ```shell
-    ping google.com
-    ```
+```shell
+ping google.com
+```
 
 39. Reboot!
 
@@ -383,37 +383,37 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 
 1. Install dependencies:
 
-    ```shell
-    pacman -Syu greetd
-    ```
+```shell
+pacman -Syu greetd
+```
 
 2. Config session and user:
 
-    ```shell
-    vim /etc/greetd/config.toml
-    ```
+```shell
+vim /etc/greetd/config.toml
+```
 
-    Put this:
+Put this:
 
-    ```toml
-    [terminal]
-    vt = 1
+```toml
+[terminal]
+vt = 1
 
-    [initial_session]
-    user="YourUserName"
-    command="Hyprland"
+[initial_session]
+user="YourUserName"
+command="Hyprland"
 
-    [default_session]
-    command = "agreety --cmd /bin/sh"
-    user = "greeter"
-    ```
+[default_session]
+command = "agreety --cmd /bin/sh"
+user = "greeter"
+```
 
 3. Enable `greetd`:
 
-    ```shell
-    # Don't use "enable --now"
-    sudo systemctl enable greetd
-    ```
+```shell
+# Don't use "enable --now"
+sudo systemctl enable greetd
+```
 
 4. Reboot and test.
 
@@ -421,167 +421,167 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 
 1. Install dependencies:
 
-    ```shell
-     pacman -Syu reflector
-    ```
+```shell
+ pacman -Syu reflector
+```
 
 2. Enable `multilib`:
 
-    ```
-    # uncoment [multilib] section in /etc/pacman.conf
-    ```
+```
+# uncoment [multilib] section in /etc/pacman.conf
+```
 
 3. Add config for auto-runs:
 
-    ```shell
-    # /etc/xdg/reflector/reflector.conf
-    --country 'Brazil','United States' # choose yours
-    --protocol https
-    --age 12
-    --latest 200
-    --fastest 10
-    --sort rate
-    --save /etc/pacman.d/mirrorlist
-    ```
+```shell
+# /etc/xdg/reflector/reflector.conf
+--country 'Brazil','United States' # choose yours
+--protocol https
+--age 12
+--latest 200
+--fastest 10
+--sort rate
+--save /etc/pacman.d/mirrorlist
+```
 
 4. Enable to auto-run:
 
-    ```shell
-     systemctl enable --now reflector.service
-     systemctl enable --now reflector.timer
-    ```
+```shell
+ systemctl enable --now reflector.service
+ systemctl enable --now reflector.timer
+```
 
 ### Basic setup SSH
 
 1. Download dependencies:
 
-    ```shell
-     pacman -Syu openssh
-    ```
+```shell
+ pacman -Syu openssh
+```
 
 2. Add some keys:
 
-    ```shell
-     ssh-keygen -t ed25519 -C "your@email.com"
-    ```
+```shell
+ ssh-keygen -t ed25519 -C "your@email.com"
+```
 
 3. Add some config, for GitHub for example (add the public key on GitHub to auto auth):
 
-    ```
-    # ~/.ssh/config
-    Host github.com
-       HostName github.com
-       User git
-       Port 22
-       IdentityFile ~/.ssh/id_ed25519_github
-       ForwardAgent yes
-    ```
+```
+# ~/.ssh/config
+Host github.com
+   HostName github.com
+   User git
+   Port 22
+   IdentityFile ~/.ssh/id_ed25519_github
+   ForwardAgent yes
+```
 
 ### Setup Encrypted External Device
 
 1. Create the partition:
 
-    ```shell
-    Command (m for help): n
-    Partition number: <Press Enter>
-    First sector: <Press Enter>
-    Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
+```shell
+Command (m for help): n
+Partition number: <Press Enter>
+First sector: <Press Enter>
+Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
 
-    Command (m for help): t
-    Partition type or alias (type L to list all): linux
-    ```
+Command (m for help): t
+Partition type or alias (type L to list all): linux
+```
 
 2. Use cryptsetup to encrypt device:
 
-    ```shell
-    cryptsetup --use-urandom luksFormat /dev/<external-device>
-    ```
+```shell
+cryptsetup --use-urandom luksFormat /dev/<external-device>
+```
 
 3. Open:
 
-    ```shell
-    cryptsetup open /dev/<external-device> <YourDeviceName>
-    ```
+```shell
+cryptsetup open /dev/<external-device> <YourDeviceName>
+```
 
 4. Make the filesystem:
 
-    ```shell
-    mkfs.ext4 /dev/mapper/<YourDeviceName>
-    ```
+```shell
+mkfs.ext4 /dev/mapper/<YourDeviceName>
+```
 
 **Optional, just for automation:**
 
 1. Create keyfile:
 
-    ```shell
-    openssl genrsa -out <path/to/key> 4096
-    ```
+```shell
+openssl genrsa -out <path/to/key> 4096
+```
 
 2. Add key to encrypted device:
 
-    ```shell
-    cryptsetup luksAddKey /dev/<external-device> <path/to/key>
-    ```
+```shell
+cryptsetup luksAddKey /dev/<external-device> <path/to/key>
+```
 
 3. Add device to /etc/crypttab for autodecrypt it:
 
-    ```shell
-    vim /etc/crypttab
+```shell
+vim /etc/crypttab
 
-    # <device-name>       UUID=<device-UUID-code>      <path/to/key>    luks,<options>
+# <device-name>       UUID=<device-UUID-code>      <path/to/key>    luks,<options>
 
-    # Example don't using keyfile
-    # BACKUP      UUID=738c6426-3ef5-48d5-a837-b437c722802f       -       luks
+# Example don't using keyfile
+# BACKUP      UUID=738c6426-3ef5-48d5-a837-b437c722802f       -       luks
 
-    # Example using
-    # BACKUP      UUID=73481cae-1b80-400c-bef3-4f4a2b2a9a1e       /root/backup-key        luks
-    ```
+# Example using
+# BACKUP      UUID=73481cae-1b80-400c-bef3-4f4a2b2a9a1e       /root/backup-key        luks
+```
 
 4. Add the external drive to /etc/fstab to automount (sometimes useless):
 
-    ```shell
-    # To help you with information about mounted drive (don't simply overwrite fstab)
-    genfstab -U /
+```shell
+# To help you with information about mounted drive (don't simply overwrite fstab)
+genfstab -U /
 
-    vim /etc/fstab
+vim /etc/fstab
 
-    # UUID=<device-UUID-code>     <path/to/mount> <type> <options>  <dump>  <fsck>
+# UUID=<device-UUID-code>     <path/to/mount> <type> <options>  <dump>  <fsck>
 
-    # For example
-    # UUID=8d90233f-36ff-434d-bc5a-de6d596719f1       /run/timeshift/backup   ext4            rw,relatime     0 2
-    ```
+# For example
+# UUID=8d90233f-36ff-434d-bc5a-de6d596719f1       /run/timeshift/backup   ext4            rw,relatime     0 2
+```
 
 ### Zram Implementation (Recommended)
 
 1. Install the `zram-generator` package:
 
-    ```shell
-    pacman -Syu zram-generator
-    ```
+```shell
+pacman -Syu zram-generator
+```
 
 2. Configure zram by creating a configuration file. This example allocates 50% of your RAM memory (or the min of 4096MiB):
 
-    ```shell
-    # /etc/systemd/zram-generator.conf
-    [zram0]
-    zram-size = ram / 2
-    compression-algorithm = zstd
-    ```
+```shell
+# /etc/systemd/zram-generator.conf
+[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+```
 
 3. Use `sytemctl` to enable the `zram-generator`:
 
-    ```shell
-    systemctl daemeon-reload
+```shell
+systemctl daemeon-reload
 
-    # The number after "zram" may be other
-    systemctl start systemd-zram-setup@zram0
-    ```
+# The number after "zram" may be other
+systemctl start systemd-zram-setup@zram0
+```
 
 4. Reboot, verify the zram device is active:
 
-    ```shell
-    swapon --show
-    ```
+```shell
+swapon --show
+```
 
 ### Setting up Snapper
 
@@ -591,81 +591,81 @@ Here is the correct procedure to set up Snapper after the system is installed an
 
 1. Install dependencies
 
-    ```shell
-    pacman -Syu snapper snap-pac grub-btrfs inotify-tools
-    ```
+```shell
+pacman -Syu snapper snap-pac grub-btrfs inotify-tools
+```
 
 2. Create the Snapper Configuration
 
 3. Umount the `@.snapshots` subvolume that we created during installation:
 
-    ```shell
-    umount /.snapshots
-    ```
+```shell
+umount /.snapshots
+```
 
 4. Next, remove the now-empty mountpoint directory:
 
-    ```shell
-    rmdir /.snapshots
-    ```
+```shell
+rmdir /.snapshots
+```
 
 5. Now, run the snapper command to create a configuration for your root filesystem (`/`). Snapper will automatically create a new `/.snapshots` directory.
 
-    ```shell
-    snapper -c root create-config /
-    ```
+```shell
+snapper -c root create-config /
+```
 
 6. Delete the plain directory snapper just made:
 
-    ```shell
-    rmdir /.snapshots
-    ```
+```shell
+rmdir /.snapshots
+```
 
 7. Re-mount all filesystems listed in your `/etc/fstab`, which will include our original `/.snapshots` mount:
 
-    ```shell
-    mount --mkdir -a
-    ```
+```shell
+mount --mkdir -a
+```
 
 8. Finally, verify that your `@.snapshots` subvolume is correctly mounted again:
 
-    ```shell
-    findmnt --target /.snapshots
-    #--> It should show /dev/mapper/cryptroot[/@.snapshots] mounted on /.snapshots
-    ```
+```shell
+findmnt --target /.snapshots
+#--> It should show /dev/mapper/cryptroot[/@.snapshots] mounted on /.snapshots
+```
 
 9. Add initial configs
 
-    ```
-    #/etc/snapper/configs/config
-    TIMELINE_MIN_AGE="1800"
-    TIMELINE_LIMIT_HOURLY="5"
-    TIMELINE_LIMIT_DAILY="5"
-    TIMELINE_LIMIT_WEEKLY="3"
-    TIMELINE_LIMIT_MONTHLY="3"
-    TIMELINE_LIMIT_YEARLY="0"
-    ```
+```
+#/etc/snapper/configs/config
+TIMELINE_MIN_AGE="1800"
+TIMELINE_LIMIT_HOURLY="5"
+TIMELINE_LIMIT_DAILY="5"
+TIMELINE_LIMIT_WEEKLY="3"
+TIMELINE_LIMIT_MONTHLY="3"
+TIMELINE_LIMIT_YEARLY="0"
+```
 
 10. Enable Automatic Snapshots and Cleanup
 
-    ```shell
-    systemctl enable --now snapper-timeline.timer
-    systemctl enable --now snapper-boot.timer
-    systemctl enable --now snapper-cleanup.timer
-    systemctl enable --now grub-btrfsd.service
-    ```
+```shell
+systemctl enable --now snapper-timeline.timer
+systemctl enable --now snapper-boot.timer
+systemctl enable --now snapper-cleanup.timer
+systemctl enable --now grub-btrfsd.service
+```
 
 11. Update grub-btrfs.cfg:
 
-    ```shell
-    /etc/grub.d/41_snapshots-btrfs
-    ```
+```shell
+/etc/grub.d/41_snapshots-btrfs
+```
 
 12. Just for test, run it:
 
-    ```shell
-    grub-mkconfig -o /boot/grub/grub.cfg
-    ```
+```shell
+grub-mkconfig -o /boot/grub/grub.cfg
+```
 
 ### Notes
 
@@ -675,15 +675,15 @@ It is important to make a backup of LUKS header so that you can access your data
 
 1. Create a backup file:
 
-    ```shell
-    sudo cryptsetup luksHeaderBackup /dev/<luks-disk> --header-backup-file luks-header-backup-$(date -I)
-    ```
+```shell
+sudo cryptsetup luksHeaderBackup /dev/<luks-disk> --header-backup-file luks-header-backup-$(date -I)
+```
 
 2. Store the backup file in a safe place, such as a USB drive. If something bad happens, you can restore the backup header:
 
-    ```shell
-    sudo cryptsetup luksHeaderRestore /dev/<luks-disk> --header-backup-file /path/to/backup_header_file
-    ```
+```shell
+sudo cryptsetup luksHeaderRestore /dev/<luks-disk> --header-backup-file /path/to/backup_header_file
+```
 
 ## References
 

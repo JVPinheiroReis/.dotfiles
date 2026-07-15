@@ -4,19 +4,27 @@ Use stow in `src/` and, if necessary, rename actual config file (stow don't over
 
 ## PACMAN
 
-    # to update
-    yay -Qeq > PACKAGES
+```shell
+# to update
+yay -Qeq > PACKAGES
+```
 
-    # to install
-    yay -S --needed - < PACKAGES
+```shell
+# to install
+yay -S --needed - < PACKAGES
+```
 
 ## FLATPAK
 
-    # to update
-    flatpak list --columns=application --app > PACKAGES-FLATPAK
+```shell
+# to update
+flatpak list --columns=application --app > PACKAGES-FLATPAK
+```
 
-    # to install
-    cat PACKAGES-FLATPAK | xargs flatpak install -y
+```shell
+# to install
+cat PACKAGES-FLATPAK | xargs flatpak install -y
+```
 
 NOTES
 
