@@ -1,4 +1,5 @@
 [soe][Equalizer#0]
+balance=-10
 numBands=7
 splitChannels=true
 
