@@ -12,4 +12,4 @@ hl.window_rule({ max_size = { 480, 270 }, match = { class = "^(mpv)$" } })
 hl.window_rule({ border_size = 0, match = { float = false, workspace = "w[tv1]s[false]" } })
 hl.window_rule({ border_size = 0, match = { float = false, workspace = "f[1]s[false]" } })
 
-hl.window_rule({ rounding = 3, match = { float = true, workspace = "w[tv1]s[false]" } })
+hl.window_rule({ rounding = 3, match = { float = true } })
