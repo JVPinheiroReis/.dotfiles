@@ -25,6 +25,7 @@
 	"editor.scrollbar.vertical": "hidden",
 	"editor.suggestSelection": "first",
 	"editor.tabSize": 4,
+	"editor.unicodeHighlight.nonBasicASCII": false,
 	"editor.wordWrap": "on",
 	"explorer.compactFolders": false,
 	"explorer.confirmDelete": false,
@@ -188,6 +189,6 @@
 		"editor.tabSize": 2,
 		"editor.insertSpaces": true,
 		"editor.defaultFormatter": "redhat.vscode-yaml"
-    },
-    "editor.unicodeHighlight.nonBasicASCII": false
+	},
+	"Lua.workspace.library": ["/usr/share/hypr/stubs"]
 }
