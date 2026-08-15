@@ -37,11 +37,12 @@ The installation process will create the following partition scheme on your driv
 | LUKS Partition | crypto_LUKS | `/dev/<luks-disk>` | `/dev/sda7`, `/dev/nvme0n1p3` |
 
 The mount points:
-| Partition | Size | Mount Point |
+
+| Partition          | Size  | Mount Point |
 | ------------------ | ----- | ----------- |
-| `/dev/<efi-disk>` | +512M | `/boot/efi` |
-| `/dev/<boot-disk>` | +1GB | `/boot` |
-| `/dev/<luks-disk>` | rest | - |
+| `/dev/<efi-disk>`  | +512M | `/boot/efi` |
+| `/dev/<boot-disk>` | +1GB  | `/boot`     |
+| `/dev/<luks-disk>` | rest  | -           |
 
 Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), we will set up a BTRFS filesystem with the following subvolume layout:
 
