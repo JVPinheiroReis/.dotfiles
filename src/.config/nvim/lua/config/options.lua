@@ -12,5 +12,5 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 
-vim.opt.spell = true
+vim.opt.spell = false
 vim.opt.spelllang = { "en", "pt_br" }

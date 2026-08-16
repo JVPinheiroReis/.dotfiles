@@ -9,7 +9,9 @@ hl.config({
     },
 
     master = {
-        new_status = "master"
+        orientation = "left",
+        new_status = "slave",
+        new_on_active = "after"
     },
 
     misc = {
