@@ -6,11 +6,16 @@ return {
         opts = {},
     },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-    { "marko-cerovac/material.nvim" },
+    {
+        "zenbones-theme/zenbones.nvim",
+        dependencies = "rktjmp/lush.nvim",
+        lazy = false,
+        priority = 1000,
+    },
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "tokyonight",
+            colorscheme = "zenwritten",
         },
     },
 }
