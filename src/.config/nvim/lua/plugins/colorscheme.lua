@@ -13,9 +13,15 @@ return {
         priority = 1000,
     },
     {
+        "jackplus-xyz/binary.nvim",
+    },
+    {
+        "y9san9/y9nika.nvim",
+    },
+    {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "zenwritten",
+            colorscheme = "y9nika",
         },
     },
 }
