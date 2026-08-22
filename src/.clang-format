@@ -1,2 +1,9 @@
+---
 BasedOnStyle: LLVM
 IndentWidth: 4
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeWhile: true
