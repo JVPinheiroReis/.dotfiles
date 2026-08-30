@@ -1,6 +1,7 @@
-vim.g.lazyvim_prettier_needs_config = true
-vim.g.lazyvim_python_lsp = "pyright"
-vim.g.lazyvim_python_ruff = "ruff"
+-- Options are automatically loaded before lazy.nvim startup.
+require("config.remote_clipboard").setup()
+
+vim.g.autoformat = true
 
 vim.opt.relativenumber = false
 vim.opt.laststatus = 0
@@ -11,6 +12,3 @@ vim.opt.smarttab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
-
-vim.opt.spell = false
-vim.opt.spelllang = { "en", "pt_br" }
