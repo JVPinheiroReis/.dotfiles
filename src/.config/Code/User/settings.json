@@ -1,5 +1,5 @@
 {
-	"workbench.colorTheme": "Everforest Dark",
+	"workbench.colorTheme": "Catppuccin Latte",
 	"chat.titleBar.signIn.enabled": false,
 	"chat.titleBar.openInAgentsWindow.enabled": false,
 	"debug.onTaskErrors": "debugAnyway",
