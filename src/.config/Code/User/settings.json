@@ -1,5 +1,5 @@
 {
-	"workbench.colorTheme": "Catppuccin Latte",
+	"workbench.colorTheme": "Tokyo Night",
 	"chat.titleBar.signIn.enabled": false,
 	"chat.titleBar.openInAgentsWindow.enabled": false,
 	"debug.onTaskErrors": "debugAnyway",
@@ -179,5 +179,8 @@
 	"[shellscript]": {
 		"files.eol": "\n",
 		"editor.defaultColorDecorators": "never"
-	}
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    }
 }

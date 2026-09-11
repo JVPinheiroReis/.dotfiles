@@ -56,15 +56,15 @@ Inside the LUKS partition (accessed, when opened, by `/dev/mapper/cryptroot`), w
 
 ## Install Arch Linux
 
-1.  Connect the USB drive and boot from the Arch Linux ISO.
+1. Connect the USB drive and boot from the Arch Linux ISO.
 
-2.  Set your keyboard layout:
+1. Set your keyboard layout:
 
 ```shell
 loadkeys <keyboard-layout>
 ```
 
-3.  Set pacman configs, where "number" could be what you want, but not too high:
+1. Set pacman configs, where "number" could be what you want, but not too high:
 
 ```shell
 vim /etc/pacman.conf
@@ -72,30 +72,30 @@ vim /etc/pacman.conf
 # ParallelDownloads = <number>
 ```
 
-4.  Make sure the system is booted in UEFI mode. The following command should display the directory contents without error:
+1. Make sure the system is booted in UEFI mode. The following command should display the directory contents without error:
 
 ```shell
 ls /sys/firmware/efi/efivars
 ```
 
-5.  Connect to the internet. A wired connection is preferred since it's easier to connect. [More info](https://wiki.archlinux.org/index.php/Installation_guide#Connect_to_the_internet)
+1. Connect to the internet. A wired connection is preferred since it's easier to connect. [More info](https://wiki.archlinux.org/index.php/Installation_guide#Connect_to_the_internet)
 
 **Note on Device Names:** Before partitioning, identify your disk's name. It will likely be `/dev/sda` or `/dev/vda` for SATA drives (including SSDs and HDDs) or `/dev/nvme0n1` for NVMe drives. Use `lsblk` to list block devices and find the correct name for your system. The guide will use `<your-disk>` as a placeholder.
 
-6.  Run `fdisk` and follow until step 11 to create Linux partitions:
+1. Run `fdisk` and follow until step 11 to create Linux partitions:
 
 ```shell
 fdisk /dev/<your-disk>
 ```
 
-7.  Create an empty GPT partition table using the `g` command. (**WARNING:** This will erase the entire disk.)
+1. Create an empty GPT partition table using the `g` command. (**WARNING:** This will erase the entire disk.)
 
 ```
 Command (m for help): g
 Created a new GPT disklabel (GUID: ...).
 ```
 
-8.  Create the EFI partition (`/dev/<efi-disk>`):
+1. Create the EFI partition (`/dev/<efi-disk>`):
 
 ```shell
 Command (m for help): n
@@ -107,7 +107,7 @@ Command (m for help): t
 Partition type or alias (type L to list all): uefi
 ```
 
-9.  Create the Boot partition (`/dev/<boot-disk>`):
+1. Create the Boot partition (`/dev/<boot-disk>`):
 
 ```shell
 Command (m for help): n
@@ -119,7 +119,7 @@ Command (m for help): t
 Partition type or alias (type L to list all): linux
 ```
 
-10. Create the LUKS partition (`/dev/<luks-disk>`):
+1. Create the LUKS partition (`/dev/<luks-disk>`):
 
 ```shell
 Command (m for help): n
@@ -131,39 +131,39 @@ Command (m for help): t
 Partition type or alias (type L to list all): linux
 ```
 
-11. Print the partition table using the `p` command and check that everything is OK:
+1. Print the partition table using the `p` command and check that everything is OK:
 
 ```shell
 Command (m for help): p
 ```
 
-12. Write changes to the disk using the `w` command. (Make sure you know what you're doing before running this command).
+1. Write changes to the disk using the `w` command. (Make sure you know what you're doing before running this command).
 
 ```shell
 Command (m for help): w
 ```
 
-13. Format the EFI and Boot Partitions:
+1. Format the EFI and Boot Partitions:
 
 ```shell
 mkfs.fat -F 32 /dev/<efi-disk>
 mkfs.ext4 /dev/<boot-disk>
 ```
 
-14. Set up the encrypted partition. This will contain your BTRFS filesystem. Let's call the mapped device `cryptroot` for clarity.
+1. Set up the encrypted partition. This will contain your BTRFS filesystem. Let's call the mapped device `cryptroot` for clarity.
 
 ```shell
 cryptsetup --use-urandom luksFormat /dev/<luks-disk>
 cryptsetup open /dev/<luks-disk> cryptroot
 ```
 
-15. Format the encrypted partition with BTRFS. The `-L` flag sets a label for the filesystem.
+1. Format the encrypted partition with BTRFS. The `-L` flag sets a label for the filesystem.
 
 ```shell
 mkfs.btrfs -L Arch /dev/mapper/cryptroot
 ```
 
-16. Create BTRFS Subvolumes.
+1. Create BTRFS Subvolumes.
 
 First, mount the encrypted BTRFS volume to a temporary directory:
 
@@ -187,7 +187,7 @@ Now that the subvolumes are created, unmount the top-level volume:
 umount /mnt
 ```
 
-17. Mount the Core Filesystems.
+1. Mount the Core Filesystems.
 
 Now we will mount our newly created subvolumes, along with the boot partitions, to their final destinations under `/mnt`.
 
@@ -210,7 +210,7 @@ mount --mkdir /dev/<boot-disk> /mnt/boot
 mount --mkdir /dev/<efi-disk> /mnt/boot/efi
 ```
 
-18. Mount the Remaining BTRFS Subvolumes.
+1. Mount the Remaining BTRFS Subvolumes.
 
 First, create the necessary directories for the subvolume mount points:
 
@@ -227,7 +227,7 @@ mount -o compress=zstd,ssd,noatime,subvol=@pkg /dev/mapper/cryptroot /mnt/var/ca
 mount -o compress=zstd,ssd,noatime,subvol=@.snapshots /dev/mapper/cryptroot /mnt/.snapshots
 ```
 
-19. Install the base system. We will also install microcode (for CPU bug fixes) and some useful packages like `git`, `vim`, and `sudo`. **Choose the correct microcode package for your CPU**.
+1. Install the base system. We will also install microcode (for CPU bug fixes) and some useful packages like `git`, `vim`, and `sudo`. **Choose the correct microcode package for your CPU**.
 
 ```shell
 # For AMD CPUs:
@@ -237,7 +237,7 @@ pacstrap -K /mnt base base-devel linux linux-firmware amd-ucode btrfs-progs mesa
 pacstrap -K /mnt base base-devel linux linux-firmware intel-ucode btrfs-progs mesa plymouth openssh git vim sudo
 ```
 
-20. Generate `/etc/fstab`. This file can be used to define how disk partitions, various other block devices, or remote filesystems should be mounted into the filesystem:
+1. Generate `/etc/fstab`. This file can be used to define how disk partitions, various other block devices, or remote filesystems should be mounted into the filesystem:
 
 ```shell
 genfstab -U /mnt > /mnt/etc/fstab
@@ -246,15 +246,15 @@ genfstab -U /mnt > /mnt/etc/fstab
 cat /mnt/etc/fstab
 ```
 
-21. Enter the new system:
+1. Enter the new system:
 
 ```shell
 arch-chroot /mnt /bin/bash
 ```
 
-22. Execute `step 3` operation.
+1. Execute `step 3` operation.
 
-23. Set TimeZone:
+1. Set TimeZone:
 
 ```shell
 # See available timezones:
@@ -264,13 +264,13 @@ ls /usr/share/zoneinfo/
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 ```
 
-24. Run hwclock(8) to generate `/etc/adjtime`:
+1. Run hwclock(8) to generate `/etc/adjtime`:
 
 ```shell
 hwclock --systohc
 ```
 
-25. Set Locale:
+1. Set Locale:
 
 ```shell
 vim /etc/locale.gen
@@ -281,13 +281,13 @@ locale-gen
 echo LANG=en_US.UTF-8 > /etc/locale.conf
 ```
 
-26. Set hostname:
+1. Set hostname:
 
 ```shell
 echo YourHostName > /etc/hostname
 ```
 
-27. Create a user:
+1. Create a user:
 
 ```shell
 useradd -m -G wheel --shell /bin/bash YourUserName
@@ -298,7 +298,7 @@ visudo
 # Uncomment %wheel ALL=(ALL) ALL
 ```
 
-28. Make keyboard config persistent:
+1. Make keyboard config persistent:
 
 ```shell
 vim /etc/vconsole.conf
@@ -306,7 +306,7 @@ vim /etc/vconsole.conf
 # KEYMAP=<keyboard-layout>
 ```
 
-29. Configure `mkinitcpio` with modules needed to create the systemd-based initramfs image:
+1. Configure `mkinitcpio` with modules needed to create the systemd-based initramfs image:
 
 ```shell
 vim /etc/mkinitcpio.conf
@@ -314,13 +314,13 @@ vim /etc/mkinitcpio.conf
 # HOOKS=(base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)
 ```
 
-30. Recreate the initramfs image:
+1. Recreate the initramfs image:
 
 ```shell
 mkinitcpio -P
 ```
 
-31. Setup systemd-boot:
+1. Setup systemd-boot:
 
 ```shell
 pacman -S grub efibootmgr
@@ -328,7 +328,7 @@ pacman -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 ```
 
-32. In `/etc/default/grub` edit the line `GRUB_CMDLINE_LINUX`. This tells GRUB to unlock the encrypted partition and specifies the root filesystem. Replace `<luks-disk-UUID-code>` with your LUKS partition's UUID (you can find this with `lsblk -f` or `blkid`).
+1. In `/etc/default/grub` edit the line `GRUB_CMDLINE_LINUX`. This tells GRUB to unlock the encrypted partition and specifies the root filesystem. Replace `<luks-disk-UUID-code>` with your LUKS partition's UUID (you can find this with `lsblk -f` or `blkid`).
 
 ```shell
 GRUB_CMDLINE_LINUX="rd.luks.name=<luks-disk-UUID-code>=cryptroot root=/dev/mapper/cryptroot rootflags=subvol=@"
@@ -346,37 +346,37 @@ Now generate the main GRUB configuration file:
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-33. Install `networkmanager` package and enable `NetworkManager` service to ensure you have Internet connectivity after rebooting:
+1. Install `networkmanager` package and enable `NetworkManager` service to ensure you have Internet connectivity after rebooting:
 
 ```shell
 pacman -S networkmanager
 systemctl enable NetworkManager
 ```
 
-34. Exit new system and unmount all filesystems:
+1. Exit new system and unmount all filesystems:
 
 ```shell
 exit
 umount -R /mnt
 ```
 
-35. Arch is now installed 🎉. Reboot:
+1. Arch is now installed 🎉. Reboot:
 
 ```shell
 reboot
 ```
 
-36. Open BIOS settings and set `GRUB` as first boot priority. Save and exit BIOS settings. After booting the system, you should see the GRUB menu.
+1. Open BIOS settings and set `GRUB` as first boot priority. Save and exit BIOS settings. After booting the system, you should see the GRUB menu.
 
-37. Reboot again and log in to Arch Linux with your username and password.
+1. Reboot again and log in to Arch Linux with your username and password.
 
-38. Check internet connectivity:
+1. Check internet connectivity:
 
 ```shell
 ping google.com
 ```
 
-39. Reboot!
+1. Reboot!
 
 ## Post Installation
 
@@ -388,7 +388,7 @@ ping google.com
 pacman -Syu greetd
 ```
 
-2. Config session and user:
+1. Config session and user:
 
 ```shell
 vim /etc/greetd/config.toml
@@ -409,14 +409,14 @@ command = "agreety --cmd /bin/sh"
 user = "greeter"
 ```
 
-3. Enable `greetd`:
+1. Enable `greetd`:
 
 ```shell
 # Don't use "enable --now"
 sudo systemctl enable greetd
 ```
 
-4. Reboot and test.
+1. Reboot and test.
 
 ### Setup `pacman` mirros list and update with `reflector`
 
@@ -426,13 +426,13 @@ sudo systemctl enable greetd
  pacman -Syu reflector
 ```
 
-2. Enable `multilib`:
+1. Enable `multilib`:
 
 ```
 # uncoment [multilib] section in /etc/pacman.conf
 ```
 
-3. Add config for auto-runs:
+1. Add config for auto-runs:
 
 ```shell
 # /etc/xdg/reflector/reflector.conf
@@ -445,7 +445,7 @@ sudo systemctl enable greetd
 --save /etc/pacman.d/mirrorlist
 ```
 
-4. Enable to auto-run:
+1. Enable to auto-run:
 
 ```shell
  systemctl enable --now reflector.service
@@ -460,13 +460,13 @@ sudo systemctl enable greetd
  pacman -Syu openssh
 ```
 
-2. Add some keys:
+1. Add some keys:
 
 ```shell
  ssh-keygen -t ed25519 -C "your@email.com"
 ```
 
-3. Add some config, for GitHub for example (add the public key on GitHub to auto auth):
+1. Add some config, for GitHub for example (add the public key on GitHub to auto auth):
 
 ```
 # ~/.ssh/config
@@ -478,81 +478,7 @@ Host github.com
    ForwardAgent yes
 ```
 
-### Setup Encrypted External Device
-
-1. Create the partition:
-
-```shell
-Command (m for help): n
-Partition number: <Press Enter>
-First sector: <Press Enter>
-Last sector, +/-sectors or +/-size{K,M,G,T,P}: <Press Enter>
-
-Command (m for help): t
-Partition type or alias (type L to list all): linux
-```
-
-2. Use cryptsetup to encrypt device:
-
-```shell
-cryptsetup --use-urandom luksFormat /dev/<external-device>
-```
-
-3. Open:
-
-```shell
-cryptsetup open /dev/<external-device> <YourDeviceName>
-```
-
-4. Make the filesystem:
-
-```shell
-mkfs.ext4 /dev/mapper/<YourDeviceName>
-```
-
-**Optional, just for automation:**
-
-1. Create keyfile:
-
-```shell
-openssl genrsa -out <path/to/key> 4096
-```
-
-2. Add key to encrypted device:
-
-```shell
-cryptsetup luksAddKey /dev/<external-device> <path/to/key>
-```
-
-3. Add device to /etc/crypttab for autodecrypt it:
-
-```shell
-vim /etc/crypttab
-
-# <device-name>       UUID=<device-UUID-code>      <path/to/key>    luks,<options>
-
-# Example don't using keyfile
-# BACKUP      UUID=738c6426-3ef5-48d5-a837-b437c722802f       -       luks
-
-# Example using
-# BACKUP      UUID=73481cae-1b80-400c-bef3-4f4a2b2a9a1e       /root/backup-key        luks
-```
-
-4. Add the external drive to /etc/fstab to automount (sometimes useless):
-
-```shell
-# To help you with information about mounted drive (don't simply overwrite fstab)
-genfstab -U /
-
-vim /etc/fstab
-
-# UUID=<device-UUID-code>     <path/to/mount> <type> <options>  <dump>  <fsck>
-
-# For example
-# UUID=8d90233f-36ff-434d-bc5a-de6d596719f1       /run/timeshift/backup   ext4            rw,relatime     0 2
-```
-
-### Zram Implementation (Recommended)
+### Zram Implementation
 
 1. Install the `zram-generator` package:
 
@@ -560,7 +486,7 @@ vim /etc/fstab
 pacman -Syu zram-generator
 ```
 
-2. Configure zram by creating a configuration file. This example allocates 50% of your RAM memory (or the min of 4096MiB):
+1. Configure zram by creating a configuration file. This example allocates 50% of your RAM memory (or the min of 4096MiB):
 
 ```shell
 # /etc/systemd/zram-generator.conf
@@ -569,7 +495,7 @@ zram-size = ram / 2
 compression-algorithm = zstd
 ```
 
-3. Use `sytemctl` to enable the `zram-generator`:
+1. Use `sytemctl` to enable the `zram-generator`:
 
 ```shell
 systemctl daemeon-reload
@@ -578,7 +504,7 @@ systemctl daemeon-reload
 systemctl start systemd-zram-setup@zram0
 ```
 
-4. Reboot, verify the zram device is active:
+1. Reboot, verify the zram device is active:
 
 ```shell
 swapon --show
@@ -596,46 +522,46 @@ Here is the correct procedure to set up Snapper after the system is installed an
 pacman -Syu snapper snap-pac grub-btrfs inotify-tools
 ```
 
-2. Create the Snapper Configuration
+1. Create the Snapper Configuration
 
-3. Umount the `@.snapshots` subvolume that we created during installation:
+2. Umount the `@.snapshots` subvolume that we created during installation:
 
 ```shell
 umount /.snapshots
 ```
 
-4. Next, remove the now-empty mountpoint directory:
+1. Next, remove the now-empty mountpoint directory:
 
 ```shell
 rmdir /.snapshots
 ```
 
-5. Now, run the snapper command to create a configuration for your root filesystem (`/`). Snapper will automatically create a new `/.snapshots` directory.
+1. Now, run the snapper command to create a configuration for your root filesystem (`/`). Snapper will automatically create a new `/.snapshots` directory.
 
 ```shell
 snapper -c root create-config /
 ```
 
-6. Delete the plain directory snapper just made:
+1. Delete the plain directory snapper just made:
 
 ```shell
 rmdir /.snapshots
 ```
 
-7. Re-mount all filesystems listed in your `/etc/fstab`, which will include our original `/.snapshots` mount:
+1. Re-mount all filesystems listed in your `/etc/fstab`, which will include our original `/.snapshots` mount:
 
 ```shell
 mount --mkdir -a
 ```
 
-8. Finally, verify that your `@.snapshots` subvolume is correctly mounted again:
+1. Finally, verify that your `@.snapshots` subvolume is correctly mounted again:
 
 ```shell
 findmnt --target /.snapshots
 #--> It should show /dev/mapper/cryptroot[/@.snapshots] mounted on /.snapshots
 ```
 
-9. Add initial configs
+1. Add initial configs
 
 ```
 #/etc/snapper/configs/config
@@ -647,7 +573,7 @@ TIMELINE_LIMIT_MONTHLY="3"
 TIMELINE_LIMIT_YEARLY="0"
 ```
 
-10. Enable Automatic Snapshots and Cleanup
+1. Enable Automatic Snapshots and Cleanup
 
 ```shell
 systemctl enable --now snapper-timeline.timer
@@ -656,13 +582,13 @@ systemctl enable --now snapper-cleanup.timer
 systemctl enable --now grub-btrfsd.service
 ```
 
-11. Update grub-btrfs.cfg:
+1. Update grub-btrfs.cfg:
 
 ```shell
 /etc/grub.d/41_snapshots-btrfs
 ```
 
-12. Just for test, run it:
+1. Just for test, run it:
 
 ```shell
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -680,7 +606,7 @@ It is important to make a backup of LUKS header so that you can access your data
 sudo cryptsetup luksHeaderBackup /dev/<luks-disk> --header-backup-file luks-header-backup-$(date -I)
 ```
 
-2. Store the backup file in a safe place, such as a USB drive. If something bad happens, you can restore the backup header:
+1. Store the backup file in a safe place, such as a USB drive. If something bad happens, you can restore the backup header:
 
 ```shell
 sudo cryptsetup luksHeaderRestore /dev/<luks-disk> --header-backup-file /path/to/backup_header_file
@@ -689,13 +615,13 @@ sudo cryptsetup luksHeaderRestore /dev/<luks-disk> --header-backup-file /path/to
 ## References
 
 - **Arch Wiki Main Guides:**
-    - [Installation guide](https://wiki.archlinux.org/title/Installation_guide)
-    - [Btrfs](https://wiki.archlinux.org/title/Btrfs)
-    - [Snapper](https://wiki.archlinux.org/title/Snapper)
-    - [dm-crypt/Encrypting an entire system](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system)
-    - [GRUB](https://wiki.archlinux.org/title/GRUB)
-    - [Zram](https://wiki.archlinux.org/title/Zram)
-    - [greetd](https://wiki.archlinux.org/title/Greetd)
+  - [Installation guide](https://wiki.archlinux.org/title/Installation_guide)
+  - [Btrfs](https://wiki.archlinux.org/title/Btrfs)
+  - [Snapper](https://wiki.archlinux.org/title/Snapper)
+  - [dm-crypt/Encrypting an entire system](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system)
+  - [GRUB](https://wiki.archlinux.org/title/GRUB)
+  - [Zram](https://wiki.archlinux.org/title/Zram)
+  - [greetd](https://wiki.archlinux.org/title/Greetd)
 
 - **Original Inspirations:**
-    - <https://gist.github.com/mattiaslundberg/8620837>
+  - <https://gist.github.com/mattiaslundberg/8620837>
