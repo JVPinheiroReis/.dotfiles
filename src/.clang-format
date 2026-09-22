@@ -1,9 +1,31 @@
----
 BasedOnStyle: LLVM
+
 IndentWidth: 4
+TabWidth: 4
+UseTab: false
 
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
   BeforeWhile: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+
+ColumnLimit: 80
+
+SpaceBeforeParens: ControlStatements
+
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+KeepEmptyLinesAtEOF: false
+
+ContinuationIndentWidth: 4
+BinPackArguments: false
+BinPackParameters: false
+AlignAfterOpenBracket: Align
