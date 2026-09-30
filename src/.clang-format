@@ -17,9 +17,9 @@ ColumnLimit: 80
 SpaceBeforeParens: ControlStatements
 
 AllowShortFunctionsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortCaseLabelsOnASingleLine: true
 
 MaxEmptyLinesToKeep: 1
 KeepEmptyLinesAtTheStartOfBlocks: false
