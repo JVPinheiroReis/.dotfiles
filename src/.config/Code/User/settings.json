@@ -1,5 +1,5 @@
 {
-	"workbench.colorTheme": "Catppuccin Latte",
+	"workbench.colorTheme": "flexoki-light",
 	"chat.titleBar.signIn.enabled": false,
 	"chat.titleBar.openInAgentsWindow.enabled": false,
 	"debug.onTaskErrors": "debugAnyway",
