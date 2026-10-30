@@ -42,8 +42,8 @@
 [alias]
     a = add
     aa = add --all
-    br = branch
-    brr = branch --remote
+    b = branch
+    br = branch --remote
     bl = blame
     ps = push
     pl = pull
