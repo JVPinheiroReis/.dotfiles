@@ -45,8 +45,8 @@
     b = branch
     br = branch --remote
     bl = blame
-    ps = push
     pl = pull
+    ps = push
     c = commit
     ca = commit --amend
     cl = clean
@@ -55,11 +55,11 @@
     ds = diff --staged
     f = fetch
     i = init
-    l = log
+    l = log --oneline
     m = merge
     r = remote
-    rs = reset
     rb = rebase
+    rs = reset
     rl = reflog
     rt = restore
     rv = revert
