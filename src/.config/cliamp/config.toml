@@ -1,0 +1,8 @@
+theme = ""
+
+visualizer = "ClassicPeak"
+repeat = "All"
+
+[ytmusic]
+cookies_from = "chromium"
+enabled = true
